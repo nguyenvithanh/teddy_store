@@ -1,0 +1,53 @@
+* {
+  padding: 0;
+  margin: 0;
+}
+:root {
+  --base: #644c38;
+  --base-light: #f7ede9;
+  --FFF: #fff;
+}
+.header {
+  display: flex;
+  justify-content: space-around;
+}
+.header .header-right .search .form-control {
+  color: var(--base);
+  width: 25rem;
+  border-radius: 0.7rem;
+  background-color: var(--base-light);
+}
+.header .header-right .search .btn {
+  color: var(--FFF);
+  font-size: 1.1rem;
+  border-radius: 10px;
+  margin: 0 0.5rem 0 0.5rem;
+  background-color: var(--base);
+}
+.header .header-right .tool .btn {
+  color: var(--base);
+  font-size: 1.1rem;
+  border-radius: 10px;
+  margin: 0 0.5rem 0 0.5rem;
+}
+.menu .menu-wrapper {
+  display: flex;
+  justify-content: space-evenly;
+  margin-top: 1rem;
+  padding-left: 5rem;
+  padding-right: 5rem;
+}
+.menu .menu-wrapper li {
+  list-style: none;
+}
+.menu .menu-wrapper li .menu-item {
+  color: var(--base);
+  font-size: 1.01rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+.menu .menu-wrapper li:hover {
+  transition: linear 0.1s;
+  transform: scale(1.1);
+  text-shadow: 0px 10px 10px rgb(122, 120, 120);
+}
