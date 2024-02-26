@@ -3,7 +3,7 @@ import "../common/css/index-user.css";
 import Navigation from "../common/nav.jsx";
 import Banner from "../common/banner.jsx";
 import Footer from "../common/footer.jsx";
-import { CloudinaryContext, Image } from "cloudinary-react";
+import TopBear from "./TopBear.jsx";
 
 export default function index() {
   return (
@@ -17,47 +17,7 @@ export default function index() {
           </div>
           <div className="product-topbear">
             <div className="row">
-              <div className="col-12 col-sm-6 col-md-3 col-lg-3">
-                <div className="product-card card text-center" style={{ width: "18rem;" }}>
-                  <CloudinaryContext cloudName="your_cloud_name">
-                    <Image publicId="your_image_public_id" />
-                  </CloudinaryContext>
-                  <div className="card-body">
-                    <h5 className="card-title">Name of product</h5>
-                    <p className="card-text">Price đ</p>
-                    <a href="#" className="btn mx-2 btn-primary">
-                      Size
-                    </a>
-                    <a href="#" className="btn mx-2 btn-primary">
-                      Size
-                    </a>
-                    <a href="#" className="btn mx-2 btn-primary">
-                      Size
-                    </a>
-                    <a href="#" className="btn mx-2 btn-primary">
-                      Size
-                    </a>
-                  </div>
-                  <div className="card-product-hover">
-                    <button type="submit" className="btn mx-2 btn-primary">
-                      <i className="fa-solid fa-bag-shopping"></i>a
-                    </button>
-                    <button type="submit" className="btn mx-2 btn-primary">
-                      <i className="fa-regular fa-eye"></i>v
-                    </button>
-                    <button type="submit" className="btn mx-2 btn-primary">
-                      <i className="fa-regular fa-heart"></i>c
-                    </button>
-                  </div>
-                </div>
-              </div>
-              <div className="col-12 col-sm-6 col-md-3 col-lg-3"></div>
-              <div className="col-12 col-sm-6 col-md-3 col-lg-3"></div>
-              <div className="col-12 col-sm-6 col-md-3 col-lg-3"></div>
-              <div className="col-12 col-sm-6 col-md-3 col-lg-3"></div>
-              <div className="col-12 col-sm-6 col-md-3 col-lg-3"></div>
-              <div className="col-12 col-sm-6 col-md-3 col-lg-3"></div>
-              <div className="col-12 col-sm-6 col-md-3 col-lg-3"></div>
+              <TopBear />
             </div>
           </div>
         </div>

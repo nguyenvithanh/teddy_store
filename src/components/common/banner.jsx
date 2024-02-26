@@ -56,7 +56,7 @@ export default function banner() {
           </div>
           <div className="col-12 col-sm-6 col-md-3 col-lg-3">
             <div className="card text-center" style={{ width: "20rem" }}>
-              <i className="fa-solid fa-wind"></i>
+              <i className="fa-solid fa-headphones-simple"></i>
               <div className="card-body">
                 <h5 className="card-title">Hỗ trợ khách hàng</h5>
                 <p className="card-text">Những thắc mắc cần giải đáp liên hệ với tổng đài, luôn sẵn sàng hỗ trợ 24/7</p>

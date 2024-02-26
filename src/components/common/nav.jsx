@@ -35,47 +35,47 @@ export default function nav() {
       <div className="menu container-fluid">
         <ul className="menu-wrapper">
           <li>
-            <a className="menu-item" href="#">
+            <a className="menu-item" href="/">
               Trang chủ
             </a>
           </li>
           <li>
-            <a className="menu-item" href="#">
+            <a className="menu-item" href="/">
               Vườn gấu
             </a>
           </li>
           <li>
-            <a className="menu-item" href="#">
+            <a className="menu-item" href="/">
               Thú bông
             </a>
           </li>
           <li>
-            <a className="menu-item" href="#">
+            <a className="menu-item" href="/">
               Gấu Teddy
             </a>
           </li>
           <li>
-            <a className="menu-item" href="#">
+            <a className="menu-item" href="/">
               Gấu hoạt hình
             </a>
           </li>
           <li>
-            <a className="menu-item" href="#">
+            <a className="menu-item" href="/">
               Bút cao cấp
             </a>
           </li>
           <li>
-            <a className="menu-item" href="#">
+            <a className="menu-item" href="/">
               Khuyến mãi
             </a>
           </li>
           <li>
-            <a className="menu-item" href="#">
+            <a className="menu-item" href="/">
               Dịch vụ
             </a>
           </li>
           <li>
-            <a className="menu-item" href="#">
+            <a className="menu-item" href="/">
               Liên hệ
             </a>
           </li>
