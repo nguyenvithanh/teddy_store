@@ -8,12 +8,8 @@ const userAPI = {
     },
     async resetPassword(data) {
         const url = `reset-password/${data.email}`;
-        await axiosClient
-            .post(url)
-            .then((res) => {
-                alert("Please check your email to reset password");
-                window.location.reload();
-            });
+        return  await axiosClient
+            .post(url);
     }
 };
 
