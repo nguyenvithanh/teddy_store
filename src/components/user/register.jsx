@@ -15,6 +15,7 @@ export default function Register() {
     const [messageEmailInvalid, setMessageEmailInvalid] = useState('Email không hợp lệ');
     const [messageUsernameInvalid, setMessageUsernameInvalid] = useState('Vui lòng nhập nhập tên đăng nhập.');
 
+
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
@@ -26,8 +27,13 @@ export default function Register() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [isNameLengthValid, setIsNameLengthValid] = useState(false);
+    const [isUsernameLengthValid, setIsUsernameLengthValid] = useState(false);
 
-    
+
+    const [isNameSpecialChar, setIsNameSpecialChar] = useState(false);
+    const [isUsernameSpecialChar, setIsUsernameSpecialChar] = useState(false);
+    const [isPasswordSpecialChar, setIsPasswordSpecialChar] = useState(false);
 
     const [isNameValid, setIsNameValid] = useState(false);
     const [isPhoneValid, setIsPhoneValid] = useState(false);
@@ -39,7 +45,7 @@ export default function Register() {
     const [isConfirmPasswordValid, setIsConfirmPasswordValid] = useState(false);
 
     useEffect(() => {
-        setIsNameValid(name.trim() !== '') ;
+        setIsNameValid(name.trim() !== '');
         setIsPhoneValid(phone.trim() !== '' && isVietnamesePhoneNumber(phone));
         setIsDobValid(dob.trim() !== '');
         setIsEmailValid(email.trim() !== '' && validateEmail(email));
@@ -47,6 +53,13 @@ export default function Register() {
         setIsUsernameValid(username.trim() !== '');
         setIsPasswordValid(password.trim() !== '');
         setIsConfirmPasswordValid(password.trim() === confirmPassword);
+
+        setIsNameLengthValid(name.trim().length == 0 || name.trim().length >= 3);
+        setIsUsernameLengthValid(username.trim().length == 0 || username.length >= 3);
+        setIsNameSpecialChar(hasSpecialCharacters(name));
+        setIsUsernameSpecialChar(hasSpecialCharacters(username));
+        setIsPasswordSpecialChar(hasSpecialCharacters(password));
+
     }, [
         name,
         phone,
@@ -57,7 +70,7 @@ export default function Register() {
         password,
         confirmPassword
     ]);
-// { Click vào input mới bắt đầu bắt lỗi
+    // { Click vào input mới bắt đầu bắt lỗi
     const [nameTouched, setNameTouched] = useState(false);
     const [phoneTouched, setPhoneTouched] = useState(false);
     const [dobTouched, setDobTouched] = useState(false);
@@ -74,10 +87,10 @@ export default function Register() {
         setDobTouched(true);
         setEmailTouched(true);
         setGenderTouched(true);
-       setUsernameTouched(true);
-       setPasswordTouched(true);
-       setConfirmPasswordTouched(true);
-        
+        setUsernameTouched(true);
+        setPasswordTouched(true);
+        setConfirmPasswordTouched(true);
+
     }
     // }
     const handleSubmit = (e) => {
@@ -93,17 +106,19 @@ export default function Register() {
             confirmPassword: confirmPassword
         }
         // check value of data is not empty
+    
         if (!isNameValid
             || !isPhoneValid
-         || !isDobValid
+            || !isDobValid
             || !isEmailValid
             || !isGenderValid
             || !isUsernameValid
             || !isPasswordValid
             || !isConfirmPasswordValid
+            || isUnderAge(dob)
         ) {
             alert('Đăng ký thất bại.');
-        }else{
+        } else {
             userAPI.register(data).then(r => {
                 if (r.toString() === 'EMAIL_EXISTED') {
                     setMessageEmailInvalid('Email đã tồn tại');
@@ -111,7 +126,7 @@ export default function Register() {
                 } else if (r.toString() === 'USERNAME_EXISTED') {
                     setMessageUsernameInvalid('Tên đăng nhập đã tồn tại');
                     setIsUsernameValid(false);
-                } 
+                }
                 else {
                     // chỗ này khi nào có login thì xóa cái alert rồi href bên dưới thành login
                     alert('Đăng ký thành công.');
@@ -129,7 +144,16 @@ export default function Register() {
         const data = {
             email: emailForgotPassword
         }
-        userAPI.resetPassword(data).then(r => r);
+        userAPI.resetPassword(data).then(r => {
+            if(r.toString() === 'NOT_FOUND_EMAIL') {
+                alert('Email không tồn tại');
+            } else {
+                alert('Vui lòng kiểm tra email để xem mật khẩu');
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
+            }
+        });
     }
 
     const validateEmail = (email) => {
@@ -141,6 +165,25 @@ export default function Register() {
     const isVietnamesePhoneNumber = (phone) => {
         return phone.match(/^(0[3|5|7|8|9])+([0-9]{8})$/);
     }
+
+
+
+    const hasSpecialCharacters = (text) => {
+        const regex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+        return regex.test(text);
+    };
+
+    const isUnderAge = (dob) => {
+        const today = new Date();
+        const birthDate = new Date(dob);
+        const age = today.getFullYear() - birthDate.getFullYear();
+
+        if (age < 12) {
+            return true;
+        }
+
+        return false;
+    };
 
     return (<>
         <div className="container-fluid p-0 m-0">
@@ -163,17 +206,27 @@ export default function Register() {
                         <div className="mb-3">
                             <label className="form-label">Tên</label>
                             <input type="text" className="form-control" required={true}
-                                onChange={(e) => setName(e.target.value)} 
+                                onChange={(e) => setName(e.target.value)}
                             />
                             {isNameValid || !nameTouched ? null : (<div className="invalid">
                                 Vui lòng nhập tên
                             </div>)}
+                            {!isNameLengthValid && nameTouched ? (
+                                <div className="invalid mb-0">
+                                    Tên phải có ít nhất 3 kí tự
+                                </div>
+                            ) : null}
+                            {nameTouched && isNameSpecialChar && (
+                                <div className="invalid">
+                                    Tên không được chứa kí tự đặc biệt
+                                </div>
+                            )}
                         </div>
                         <div className="mb-3 row">
                             <div className="col-md-6">
                                 <label className="form-label">Điện thoại</label>
                                 <input type="email" className="form-control" required={true}
-                                    onChange={(e) => setPhone(e.target.value)} 
+                                    onChange={(e) => setPhone(e.target.value)}
                                 />
                                 {isPhoneValid || !phoneTouched ? null : (
                                     <div className="invalid">
@@ -186,14 +239,19 @@ export default function Register() {
                                 <input type="date" className="form-control" required={true}
                                     onChange={(e) => setDob(e.target.value)}
                                 />
-                                {isDobValid || !dobTouched? null : (
+                                {isDobValid || !dobTouched ? null : (
                                     <div className="invalid">
                                         Vui lòng nhập ngày sinh
                                     </div>
                                 )}
+                                {(isUnderAge(dob) && dobTouched) && (
+                                    <div className="invalid">
+                                        Bạn phải đủ 12 tuổi để đăng ký.
+                                    </div>
+                                )}
                             </div>
                         </div>
-                        <div className="mb-3">
+                        <div className="mb-4">
                             <label className="form-label">Email </label>
                             <input type="email" className="form-control" required={true}
                                 onChange={(e) => setEmail(e.target.value)}
@@ -204,7 +262,7 @@ export default function Register() {
                                 </div>
                             )}
                         </div>
-                        <div className="mb-3">
+                        <div className="mb-2">
                             <div className="d-flex">
                                 <label className="form-label me-5">Giới tính</label>
                                 <div className="form-check me-2">
@@ -233,10 +291,21 @@ export default function Register() {
                             <input type="text" className="form-control" required={true}
                                 onChange={(e) => setUsername(e.target.value)} />
                             {isUsernameValid || !usernameTouched ? null : (
-                                <div className="invalid">
+                                <div className="invalid mb-0">
                                     {messageUsernameInvalid}
                                 </div>
                             )}
+                            {nameTouched && isUsernameSpecialChar && (
+                                <div className="invalid mb-0">
+                                    Tên đăng nhập không được chứa kí tự đặc biệt
+                                </div>
+                            )}
+                            {!isUsernameLengthValid && usernameTouched ? (
+                                <div className="invalid mb-0">
+                                    Tên đăng nhập phải có ít nhất 3 kí tự
+                                </div>
+                            ) : null}
+                            
                         </div>
                         <div className="mb-3">
                             <label className="form-label">Mật khẩu </label>
@@ -308,7 +377,7 @@ export default function Register() {
                         </button>
                     </div>
                     <br />
-                  
+
                 </div>
             </div>
         </div>
