@@ -26,3 +26,32 @@
 .container-fluid .product-topbear .product-card:hover .card-product-hover {
   transform: translateY(100%);
 }
+
+.image-container {
+  text-align: center;
+}
+.image-container img {
+  max-width: 100%;
+  max-height: 400px; /* Đặt chiều cao tối đa của hình ảnh */
+}
+.button-container {
+  margin-top: 10px;
+  text-align: center;
+}
+.button-container button {
+  margin: 0 5px;
+}
+.image-container {
+  text-align: center;
+}
+.image-container img {
+  max-width: 100%;
+  max-height: 400px; /* Đặt chiều cao tối đa của hình ảnh */
+}
+.button-container {
+  margin-top: 10px;
+  text-align: center;
+}
+.button-container button {
+  margin: 0 5px;
+}

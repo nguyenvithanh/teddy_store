@@ -3,17 +3,37 @@
   margin: 0;
 }
 :root {
-  --base: #644c38;
+  
   --base-light: #f7ede9;
   --FFF: #fff;
 }
 .header {
-  display: flex;
-  justify-content: space-around;
+   background-color: white;
 }
+/* Thay đổi màu chữ và gạch chân của menu item */
+.ant-menu-title-content {
+  color: #644C38; /* Màu chữ */
+ 
+    /* Màu gạch chân */
+}
+
+/* Thay đổi màu chữ và gạch chân của menu item được chọn */
+.ant-menu-light .ant-menu-item-selected {
+  
+  border-bottom:2px solid #fff !important; /* Thay đổi màu gạch chân */
+}
+.ant-menu-item-selected{
+  background-color: #644C38 !important;
+}
+
+.ant-menu-item-selected span{
+  color: #fff  !important;
+}
+
 .header .header-right .search .form-control {
   color: var(--base);
   width: 25rem;
+  height: 35px;
   border-radius: 0.7rem;
   background-color: var(--base-light);
 }
@@ -22,27 +42,24 @@
   font-size: 1.1rem;
   border-radius: 10px;
   margin: 0 0.5rem 0 0.5rem;
+  height: 35px;
   background-color: var(--base);
 }
 .header .header-right .tool .btn {
   color: var(--base);
   font-size: 1.1rem;
-  border-radius: 10px;
-  margin: 0 0.5rem 0 0.5rem;
+  border-radius: 10px; 
 }
 .menu .menu-wrapper {
   display: flex;
-  justify-content: space-evenly;
-  margin-top: 1rem;
-  padding-left: 5rem;
-  padding-right: 5rem;
+  justify-content: space-evenly; 
 }
 .menu .menu-wrapper li {
   list-style: none;
 }
 .menu .menu-wrapper li .menu-item {
   color: var(--base);
-  font-size: 1.01rem;
+  font-size: 0.9rem;
   font-weight: 600;
   text-decoration: none;
 }
@@ -50,4 +67,7 @@
   transition: linear 0.1s;
   transform: scale(1.1);
   text-shadow: 0px 10px 10px rgb(122, 120, 120);
+}
+.img-fluid{
+  width: 170px; 
 }

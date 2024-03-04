@@ -15,6 +15,7 @@ export default function TopBear() {
 
   useEffect(() => {
     loadTopBear();
+    
   }, []);
 
   return (
