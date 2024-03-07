@@ -4,10 +4,33 @@
 }
 :root {
   --base: #644c38;
-  --base-lioght: #F7F1E8
+  --base-lioght: #F7F1E8;
+  --background: #FFFFFF;
 }
 .footer{
   background-color: var(--base-lioght);
+}
+.letter i{
+  font-size: 3rem;
+  color: var(--base);
+}
+.letter .line .title{
+  color: var(--base);
+  font-size: 1.3rem;
+}
+.letter .line .content{
+  color: var(--base);
+}
+.container .input input{
+  width: 100%;
+  border-radius: 15px;
+}
+.container .input .btn{
+  color: var(--background);
+  margin: 0 1.2rem;
+  border-radius: 15px;
+  background-color: var(--base);
+  
 }
 .wrapper {
   margin-top: 3rem;
@@ -19,7 +42,7 @@
 }
 .wrapper li {
   list-style-type: none;
-  padding: 0 7.5rem;
+  /* padding: 0 7.5rem; */
 }
 .wrapper li {
   text-align: left;
