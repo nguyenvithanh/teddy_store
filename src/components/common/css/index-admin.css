@@ -1,4 +1,7 @@
-.ant-layout .ant-layout-sider-children {
+.ant-layout{
+    padding: 0;
+}
+ .ant-layout-sider-children {
     min-width: 230px ;
     max-width: 230px  ;
 }

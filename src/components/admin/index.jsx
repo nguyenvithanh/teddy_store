@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import "../common/css/index-admin.css";
-import HomePageForm from '../admin/admin-product';
+import HomePage from './HomePage';
 import SVPageForm from '../admin/admin-service';
 import logoHeader from "../../assets/XINH_logohedear.png";
-import { HomeOutlined } from '@ant-design/icons';
+import { HomeOutlined, SolutionOutlined,IdcardOutlined } from '@ant-design/icons';
 import { Breadcrumb, Layout, Menu, theme } from 'antd'; 
 const { Header, Content, Footer, Sider } = Layout;
 function getItem(label, key, icon, children) {
@@ -16,7 +16,7 @@ function getItem(label, key, icon, children) {
 }
 const items = [
     getItem('Trang chủ', '1', <HomeOutlined />),
-    getItem('Quản lý', 'sub1', <HomeOutlined />, [
+    getItem('Quản lý', 'sub1', <SolutionOutlined />, [
         getItem('Quản lý hàng hóa', '2'),
         getItem('Quản lý size và màu', '3'),
         getItem('Quản lý sản phẩm', '4'),
@@ -24,7 +24,7 @@ const items = [
         getItem('Giảm giá', '6'),
         getItem('Dịch vụ', '7'),
     ]),
-    getItem('Quản lý khách hàng', 'sub2', <HomeOutlined />, [
+    getItem('Quản lý khách hàng', 'sub2', <IdcardOutlined />, [
         getItem('Tom', '8'),
         getItem('Bill', '9'),
         getItem('Alex', '10'),
@@ -46,7 +46,7 @@ const Indexadmin = () => {
         setSelectedMenuItem(item);
     };
     const formComponents = {
-        '1': <HomePageForm />,
+        '1': <HomePage/>,
         '2': <SVPageForm />,
         
         // Thêm các item khác nếu cần
@@ -81,7 +81,7 @@ const Indexadmin = () => {
                 <div className="demo-logo-vertical" /><a href="/" className=" ">
                     <img src={logoHeader} className="img-fluid " alt="Logo" />
                 </a>
-                <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" items={items} onClick={({ key }) => handleMenuItemClick(key)} />
+                <Menu defaultSelectedKeys={['1']} mode="inline" items={items} onClick={({ key }) => handleMenuItemClick(key)} />
 
             </Sider>
             <Layout>
@@ -104,14 +104,12 @@ const Indexadmin = () => {
                     </Breadcrumb>
                     <div
                         style={{
-                            padding: 24,
-                            minHeight: 360,
                             background: colorBgContainer,
                             borderRadius: borderRadiusLG,
                         }}
 
                     >
-                        <div style={{ padding: 24, minHeight: 360, background: '#fff' }}>
+                        <div style={{ padding: 20, minHeight: 360, background: '#fff' }}>
                         {formComponents[selectedMenuItem]}
                         </div>
                     </div>
