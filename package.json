@@ -21,9 +21,16 @@
     "react": "^18.2.0",
     "react-bootstrap": "^2.10.0",
     "react-dom": "^18.2.0",
+<<<<<<< HEAD
     "react-google-charts": "^4.0.1",
     "react-scripts": "^5.0.1",
     "sweetalert2": "^11.6.13",
+=======
+    "react-scripts": "^3.0.1",
+    "react-slick": "^0.30.2",
+    "slick-carousel": "^1.8.1",
+    "sweetalert2": "^11.10.4",
+>>>>>>> 66f89ecc20d26249a896b2a6b94de0119fadb6d8
     "web-vitals": "^2.1.4",
     "yarn": "^1.22.21"
   },
@@ -52,6 +59,7 @@
     ]
   },
   "devDependencies": {
+    "eslint-plugin-react-hooks": "^1.7.0",
     "react-router-dom": "^6.22.0"
   }
 }

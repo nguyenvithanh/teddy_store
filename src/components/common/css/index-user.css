@@ -4,28 +4,45 @@
 }
 :root {
   --base: #644c38;
+  --background: #F7F1E8;
+  --yellow: #EA7513;
 }
 .container-fluid .title-topbear h3 {
   color: var(--base);
 }
-.container-fluid .product-topbear .product-card {
-  position: relative;
-  overflow: hidden;
+.thu-bong{
+  background-color: var(--background);
+}
+.title-blog{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.title-blog h3{
+  color: var(--base);
+}
+.blog .title-blog .arrow-blog .btn i{
+  color: var(--base);
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+.content .card {
+  border-radius: 15px;
+  box-shadow: 4px 4px 4px rgba(224, 224, 224, 0.815);
+}
+.content .card:hover{
   cursor: pointer;
+  transform: scale(1.01);
+  transition: 0.2s linear;
 }
-.container-fluid .product-topbear .card-product-hover {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  padding: 10px;
-  background-color: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(10px);
-  transform: translateY(0%);
-  transition: 0.3s linear;
+.content .card img{
+  border-radius: 15px;
 }
-.container-fluid .product-topbear .product-card:hover .card-product-hover {
-  transform: translateY(100%);
+.content .card .card-body .card-title{
+  color: var(--base);
+  font-size: 1.1rem;
 }
+<<<<<<< HEAD
 
 .image-container {
   text-align: center;
@@ -54,4 +71,20 @@
 }
 .button-container button {
   margin: 0 5px;
+=======
+.content .card .card-body .card-text{
+  color: var(--yellow);
+  font-size: 0.8rem;
+}
+.content .card .card-body .card-text1{
+  color: var(--base);
+  font-size: 0.8rem;
+}
+.content .card .card-body .btn {
+  font-size: 0.8rem;
+  padding: 0.3rem 1rem;
+  color: var(--background);
+  background-color: var(--base);
+  border-radius: 10px;
+>>>>>>> 66f89ecc20d26249a896b2a6b94de0119fadb6d8
 }

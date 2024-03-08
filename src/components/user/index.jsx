@@ -1,19 +1,36 @@
 import React from "react";
-import "../common/css/index-user.css";
 import Navigation from "../common/nav.jsx";
 import Banner from "../common/banner.jsx";
 import Footer from "../common/footer.jsx";
 import TopBear from "./TopBear.jsx";
+import DataBear from "./DataBear.jsx";
+import ThuBong from "./ThuBong.jsx";
+import GauBongHoatHinh from "./GauBongHoatHinh";
+import { Link } from "react-router-dom";
+import "../common/css/index-user.css";
 
-export default function index() {
+export default function Index() {
   return (
     <>
       <div className="container-fluid p-0 m-0">
+<<<<<<< HEAD
         <div className="container-fluid p-0 m-0" >{<Navigation />}</div>
         <div className="container-fluid p-0 m-0" >{<Banner />}</div>
+=======
+        <div className="container-fluid p-0 mt-0">{<Navigation />}</div>
+        <div className="container">{<Banner />}</div>
+>>>>>>> 66f89ecc20d26249a896b2a6b94de0119fadb6d8
         <div className="container p-0 my-5">
-          <div className="title-topbear text-center">
-            <h3>Top gấu bán chạy</h3>
+          <div className="title-topbear">
+            <div className="title text-center">
+              <h3 className="">Top gấu bán chạy</h3>
+            </div>
+            <div className="learn-more text-end">
+              <Link className="text-decoration-none">
+                <span>Xem thêm</span>
+                <i className="mx-1 fa-solid fa-angles-right"></i>
+              </Link>
+            </div>
           </div>
           <div className="product-topbear">
             <div className="row">
@@ -21,7 +38,144 @@ export default function index() {
             </div>
           </div>
         </div>
-        <div className="container-fluid p-0 m-0">{<Footer />}</div>
+        <div className="container mb-5 p-0">
+          <div className="row text-center">
+            <div className="col-6 col-sm-6 col-md-6 col-lg-6">
+              <Link>
+                <img
+                  src="/img_pro/sll.jpg"
+                  alt=""
+                  width={"100%"}
+                  style={{ borderRadius: "10px" }}
+                />
+              </Link>
+            </div>
+            <div className="col-6 col-sm-6 col-md-6 col-lg-6">
+              <Link>
+                <img
+                  src="/img_pro/theu-ao.jpg"
+                  alt=""
+                  width={"100%"}
+                  style={{ borderRadius: "10px" }}
+                />
+              </Link>
+            </div>
+          </div>
+        </div>
+        <div className="container mb-5 d-flex justify-content-center">
+          <div className="row p-0 m-0 w-75">{<DataBear />}</div>
+          <div className="banner-teddy w-25">
+            <Link className="img-fluid">
+              <img
+                src="/img_pro/teddy-cc.png"
+                style={{ borderRadius: "10px" }}
+              />
+            </Link>
+          </div>
+        </div>
+        <div className="thu-bong container-fluid py-5">
+          <div className="container my-3">
+            <div className="title-topbear">
+              <div className="title text-center">
+                <h3 className="">Thú bông</h3>
+              </div>
+              <div className="learn-more text-end">
+                <Link className="text-decoration-none">
+                  <span>Xem thêm</span>
+                  <i className="mx-1 fa-solid fa-angles-right"></i>
+                </Link>
+              </div>
+            </div>
+          </div>
+          <div className="container">{<ThuBong />}</div>
+        </div>
+        <div className="container my-5 d-flex justify-content-center">
+          <div className="banner-teddy p-0 m-0 w-20">
+            <Link className="img-fluid">
+              <img
+                src="/img_pro/gau-bong-hoat-hinh.jpg"
+                alt=""
+                style={{ borderRadius: "10px" }}
+              />
+            </Link>
+          </div>
+          <div className="row p-0 m-0 w-75">{<GauBongHoatHinh />}</div>
+        </div>
+        <div className="blog container my-5">
+          <div className="title-blog">
+            <div className="title">
+              <h3>Blog của Gấu Bông Xinh</h3>
+            </div>
+            <div className="arrow-blog">
+              <Link className="btn btn-left">
+                <i className="fa-solid fa-angle-left"></i>
+              </Link>
+              <Link className="btn btn-right">
+                <i className="fa-solid fa-angle-right"></i>
+              </Link>
+            </div>
+          </div>
+          <hr />
+          <div className="content">
+            <div className="row p-0 m-0">
+              <div className="px-5 col-12 col-sm-6 col-md-4 col-lg-4">
+                <div className="card p-4">
+                  <img src="/img_pro/thubong_cho_shiba.jpg" />
+                  <div className="card-body">
+                    <h5 className="card-title p-0 m-0">
+                      Top những gấu bông được yêu thích nhất
+                    </h5>
+                    <p className="card-text p-0 mt-1 mb-0">Tháng 7, năm 2023</p>
+                    <p className="card-text1 p-0 mt-1 mb-0">
+                      Tổng hợp những mẫu Gấu Brown bán chạy, được các bạn trẻ
+                      yêu thích nhất năm 2023. Những mẫu Brown nhập khẩu với ...
+                    </p>
+                    <Link href="/" className="btn mt-3">
+                      Xem thêm
+                    </Link>
+                  </div>
+                </div>
+              </div>
+              <div className="px-5 col-12 col-sm-6 col-md-4 col-lg-4">
+                <div className="card p-4">
+                  <img src="/img_pro/thubong_cho_shiba.jpg" />
+                  <div className="card-body">
+                    <h5 className="card-title p-0 m-0">
+                      Top những gấu bông được yêu thích nhất
+                    </h5>
+                    <p className="card-text p-0 mt-1 mb-0">Tháng 7, năm 2023</p>
+                    <p className="card-text1 p-0 mt-1 mb-0">
+                      Tổng hợp những mẫu Gấu Brown bán chạy, được các bạn trẻ
+                      yêu thích nhất năm 2023. Những mẫu Brown nhập khẩu với ...
+                    </p>
+                    <Link href="/" className="btn mt-3">
+                      Xem thêm
+                    </Link>
+                  </div>
+                </div>
+              </div>
+              <div className="px-5 col-12 col-sm-6 col-md-4 col-lg-4">
+                <div className="card p-4">
+                  <img src="/img_pro/thubong_cho_shiba.jpg" />
+                  <div className="card-body">
+                    <h5 className="card-title p-0 m-0">
+                      Top những gấu bông được yêu thích nhất
+                    </h5>
+                    <p className="card-text p-0 mt-1 mb-0">Tháng 7, năm 2023</p>
+                    <p className="card-text1 p-0 mt-1 mb-0">
+                      Tổng hợp những mẫu Gấu Brown bán chạy, được các bạn trẻ
+                      yêu thích nhất năm 2023. Những mẫu Brown nhập khẩu với ...
+                    </p>
+                    <Link href="/" className="btn mt-3">
+                      Xem thêm
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="container-fluid p-0 mt-5">{<Footer />}</div>
       </div>
     </>
   );
