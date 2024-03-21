@@ -63,7 +63,7 @@ export default function TopBear() {
                 <Link type="submit" className="btn mx-2 btn-primary">
                   <i className="fa-solid fa-bag-shopping"></i>
                 </Link> 
-                <Link type="submit" className="btn mx-2 btn-primary">
+                <Link type="submit" className="btn mx-2 btn-primary" to={`/detail_products/${product.id}`}>
                   <i className="fa-regular fa-eye"></i>
                 </Link>
                 <Link type="submit" className="btn mx-2 btn-primary">

@@ -12,17 +12,11 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
- 
-        {/* // <Route path="/" element={<Index />}></Route> 
-         
-        //  
-        // <Route path="/teddy_store/register" element={<Register/>}></Route>  */}
         <Route path="/admin" element={<IndexAdmin/>}></Route>
-        <Route path="/detail_product" element={<DetailProduct/>}></Route>
+        <Route path="/detail_products/:id" element={<DetailProduct/>}></Route>
         <Route path="/" element={<Index />}></Route>
         <Route path="/teddy-store/login" element={<Login />}></Route>
         <Route path="/teddy_store/register" element={<Register/>}></Route>
- 
       </Routes>
     </BrowserRouter>
   );

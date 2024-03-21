@@ -8,16 +8,6 @@
 .wrapper img {
   border-radius: 1rem;
 }
-<<<<<<< HEAD
-/* .article .card{
-     border: none;
-     color: var(--base);
-}
-.article .card i{
-     font-size: 2rem;
-     padding: 1rem 0;
-} */
-=======
 .article .card {
   border: none;
   color: var(--base);
@@ -26,4 +16,3 @@
   font-size: 2rem;
   padding: 1rem 0;
 }
->>>>>>> 66f89ecc20d26249a896b2a6b94de0119fadb6d8

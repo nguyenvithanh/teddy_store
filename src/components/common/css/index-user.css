@@ -42,7 +42,7 @@
   color: var(--base);
   font-size: 1.1rem;
 }
-<<<<<<< HEAD
+ 
 
 .image-container {
   text-align: center;
@@ -71,7 +71,7 @@
 }
 .button-container button {
   margin: 0 5px;
-=======
+}
 .content .card .card-body .card-text{
   color: var(--yellow);
   font-size: 0.8rem;
@@ -86,5 +86,5 @@
   color: var(--background);
   background-color: var(--base);
   border-radius: 10px;
->>>>>>> 66f89ecc20d26249a896b2a6b94de0119fadb6d8
+ 
 }

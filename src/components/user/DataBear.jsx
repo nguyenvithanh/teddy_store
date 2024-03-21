@@ -15,10 +15,11 @@ export default function DataBear() {
     setSelectedProductId(productId);
     setSelectedSize(size);
   };
+  
   const loadDataBear = async () => {
     try {
       const dataProduct = await axios.get(
-        "http://localhost:7070/teddy-store/getAllProduct"
+        `http://localhost:7070/teddy-store/getAllProduct`
       );
       setDataBear(dataProduct.data);
 
@@ -72,7 +73,7 @@ export default function DataBear() {
                   <Link type="submit" className="btn mx-2 btn-primary">
                     <i className="fa-solid fa-bag-shopping"></i>
                   </Link>
-                  <Link type="submit" className="btn mx-2 btn-primary">
+                  <Link className="btn mx-2 btn-primary" to={`/detail_products/${product.id}`} >
                     <i className="fa-regular fa-eye"></i>
                   </Link>
                   <Link type="submit" className="btn mx-2 btn-primary">

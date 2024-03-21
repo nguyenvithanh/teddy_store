@@ -13,13 +13,8 @@ export default function Index() {
   return (
     <>
       <div className="container-fluid p-0 m-0">
-<<<<<<< HEAD
         <div className="container-fluid p-0 m-0" >{<Navigation />}</div>
         <div className="container-fluid p-0 m-0" >{<Banner />}</div>
-=======
-        <div className="container-fluid p-0 mt-0">{<Navigation />}</div>
-        <div className="container">{<Banner />}</div>
->>>>>>> 66f89ecc20d26249a896b2a6b94de0119fadb6d8
         <div className="container p-0 my-5">
           <div className="title-topbear">
             <div className="title text-center">

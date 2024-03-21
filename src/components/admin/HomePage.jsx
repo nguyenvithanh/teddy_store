@@ -1,7 +1,9 @@
-import React from 'react';
+import axios from "axios";
+import React, { useEffect, useState } from "react"; 
 import "../common/css/home-admin.css";
 import Admin_banner from "../../assets/admin_banner.jpg";
-import { EyeOutlined, DollarOutlined } from '@ant-design/icons';
+import Adminorder from '../admin/admin-order';
+import { EyeOutlined, DollarOutlined ,ArrowRightOutlined} from '@ant-design/icons';
 import { Carousel, Table, Card, Col, Row } from 'antd';
 import { Chart } from "react-google-charts";
 
@@ -28,49 +30,16 @@ const HomePageForm = () => {
         },
         {
             title: 'Thành tiền',
-            dataIndex: 'price',
-            key: 'price',
+            dataIndex: 'price_unit',
+            key: 'price_unit',
         },
         {
             dataIndex: '',
             key: 'x',
-            render: () => <a>Delete</a>,
+            render: () => <a  href="{Adminorder}"><ArrowRightOutlined /></a> , 
         },
     ];
-    const dataa = [
-        {
-            key: 0,
-            date: '03/03/2024',
-            id: 'ID546576745',
-            status: 'Đã thanh toán',
-            price: '170.000 VND',
-
-        },
-        {
-            key: 1,
-            date: '03/03/2024',
-            id: 'ID546576745',
-            status: 'Đã thanh toán',
-            price: '170.000 VND',
-
-        },
-        {
-            key: 2,
-            date: '03/03/2024',
-            id: 'ID546576745',
-            status: 'Đã thanh toán',
-            price: '170.000 VND',
-
-        },
-        {
-            key: 3,
-            date: '03/03/2024',
-            id: 'ID546576745',
-            status: 'Đã thanh toán',
-            price: '170.000 VND',
-
-        },
-    ];
+    
     const columnssp = [
         {
             title:'ID',
@@ -90,49 +59,12 @@ const HomePageForm = () => {
         {
             title:'Size',
             dataIndex: 'size',
-            key: 'price',
+            key: 'size',
         },
         {
             title:'Lượt mua',
-            dataIndex: 'luotmua',
-            key: 'luotmua',
-        },
-    ];
-    const datasp = [
-        {
-            key: 0,
-            id: 'ID134437',
-            name: 'Gấu Teddy lông xoăn',
-            color: 'Nâu',
-            size: '35 cm',
-            luotmua: 10,
-        },
-        {
-            key: 1,
-            id: 'ID134437',
-            name: 'Gấu Teddy lông xoăn',
-            color: 'Nâu',
-            size: '35 cm',
-            luotmua: 10,
-
-        },
-        {
-            key: 2,
-            id: 'ID134437',
-            name: 'Gấu Teddy lông xoăn',
-            color: 'Nâu',
-            size: '35 cm',
-            luotmua: 10,
-
-        },
-        {
-            key: 3,
-            id: 'ID134437',
-            name: 'Gấu Teddy lông xoăn',
-            color: 'Nâu',
-            size: '35 cm',
-            luotmua: 10,
-
+            dataIndex: 'purchases',
+            key: 'purchases',
         },
     ];
     const data = [
@@ -150,7 +82,26 @@ const HomePageForm = () => {
         pieHole: 0.4, 
         pieStartAngle: 100,
       };
+      const [productDetails, setProductDetails] = useState([]);
+const [orderDetail, setOrderDetail] = useState([]);
 
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const productDetailsResponse = axios.get('http://localhost:7070/teddy-store/product-details');
+      const orderDetailResponse = axios.get('http://localhost:7070/teddy-store/DetailsOrders');
+      
+      const [productDetailsData, orderDetailData] = await Promise.all([productDetailsResponse, orderDetailResponse]);
+      
+      setProductDetails(productDetailsData.data);
+      setOrderDetail(orderDetailData.data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  fetchData();
+})
     return (
         <>
             <Carousel>
@@ -201,27 +152,14 @@ const HomePageForm = () => {
                 <Col span={14} >
                     <Table pagination={false}
                         columns={columns}
-                        expandable={{
-
-                            rowExpandable: (record) => record.name !== 'Not Expandable',
-                        }}
-                        dataSource={dataa}
+                        
+                        dataSource={orderDetail}
                         bordered
                         title={() => 'Đơn hàng mới nhất'}
                         
                     />
                     
-                    <Table
-                        pagination={false}
-                        columns={columnssp}
-                        expandable={{
-
-                            rowExpandable: (record) => record.name !== 'Not Expandable',
-                        }}
-                        dataSource={datasp}
-                        bordered
-                        title={() => 'Sản phẩm bán chạy nhất'}
-                    />
+                    <Table dataSource={productDetails} columns={columnssp} pagination={false} title={() => 'Sản phẩm bán chạy nhất'}/>
                 </Col>
                 <Col span={10}> 
                     <div className='chart'>
