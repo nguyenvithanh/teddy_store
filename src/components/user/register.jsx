@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import Navigation from "../common/nav.jsx";
+import Footer from "../common/footer.jsx";
 import "./css/register.css";
 import userAPI from "../api/userAPI";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
-import forgotPasswordImg from "./images/forget-password-img.jpg";
+import forgotPasswordImg from "../../assets/forget-password-img.jpg";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -35,6 +36,7 @@ export default function Register() {
   const [isNameSpecialChar, setIsNameSpecialChar] = useState(false);
   const [isUsernameSpecialChar, setIsUsernameSpecialChar] = useState(false);
   const [isPasswordSpecialChar, setIsPasswordSpecialChar] = useState(false);
+  console.log(isPasswordSpecialChar);
 
   const [isNameValid, setIsNameValid] = useState(false);
   const [isPhoneValid, setIsPhoneValid] = useState(false);
@@ -55,9 +57,9 @@ export default function Register() {
     setIsPasswordValid(password.trim() !== "");
     setIsConfirmPasswordValid(password.trim() === confirmPassword);
 
-    setIsNameLengthValid(name.trim().length == 0 || name.trim().length >= 3);
+    setIsNameLengthValid(name.trim().length === 0 || name.trim().length >= 3);
     setIsUsernameLengthValid(
-      username.trim().length == 0 || username.length >= 3
+      username.trim().length === 0 || username.length >= 3
     );
     setIsNameSpecialChar(hasSpecialCharacters(name));
     setIsUsernameSpecialChar(hasSpecialCharacters(username));
@@ -121,7 +123,7 @@ export default function Register() {
         } else {
           // chỗ này khi nào có login thì xóa cái alert rồi href bên dưới thành login
           alert("Đăng ký thành công.");
-          window.location.href = "/";
+          navigate("/teddy-store/homePage");
         }
       });
       // .catch(error => {
@@ -149,16 +151,16 @@ export default function Register() {
 
   const validateEmail = (email) => {
     return email.match(
-      /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     );
   };
 
   const isVietnamesePhoneNumber = (phone) => {
-    return phone.match(/^(0[3|5|7|8|9])+([0-9]{8})$/);
+    return phone.match(/^(0[3|5|7|8|9])([0-9]{8})$/);
   };
 
   const hasSpecialCharacters = (text) => {
-    const regex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+    const regex = /[!@#$%^&*()_+\-=\][{};':"\\|,.<>?]/;
     return regex.test(text);
   };
 
@@ -177,7 +179,7 @@ export default function Register() {
   return (
     <>
       <div className="container-fluid p-0 m-0">
-        <div className="container-fluid">{<Navigation />}</div>
+        <div className="container-fluid p-0 m-0">{<Navigation />}</div>
       </div>
       <div>
         <meta charSet="UTF-8" />
@@ -358,24 +360,23 @@ export default function Register() {
                 </button>
                 <p>
                   Bạn đã có tài khoản?{" "}
-                  <a href="#" style={{ color: "#644c38" }}>
+                  <Link to={"/teddy-store/login"} style={{ color: "#644c38" }}>
                     Đăng nhập
-                  </a>
+                  </Link>
                 </p>
                 <p>
                   Bạn quên mật khẩu?
-                  <a
-                    href="##"
+                  <Link
+                    to={"/"}
                     style={{ color: "#644c38" }}
                     onClick={handleShow}
                   >
                     Quên mật khẩu
-                  </a>
+                  </Link>
                 </p>
               </div>
             </form>
           </div>
-          {/* end form */}
           <div className="text-center mb-4">
             <hr
               className="my-4 mx-3"
@@ -439,6 +440,7 @@ export default function Register() {
           </div>
         </div>
       </div>
+      <div className="container-fluid p-0 m-0">{<Footer />}</div>
 
       <Modal show={show} onHide={handleClose} size={"lg"} centered={true}>
         <Modal.Header closeButton></Modal.Header>

@@ -32,11 +32,14 @@
   margin: 0 0.5rem 0 0.5rem;
   cursor: pointer;
 }
-.header .header-right .tool .btn{
+.dropdown-toggle::after{
+  display: none;
+}
+.header .header-right .tool .btn {
   display: flex;
   flex-direction: column;
 }
-.header .header-right .tool .btn span{
+.header .header-right .tool .btn span {
   font-size: 1rem;
 }
 .header .header-right .tool .btn:hover i {
