@@ -1,0 +1,28 @@
+* {
+  padding: 0;
+  margin: 0;
+}
+:root {
+  --base: #644c38;
+}
+.container-fluid .title-topbear h3 {
+  color: var(--base);
+}
+.container-fluid .product-topbear .product-card {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+.container-fluid .product-topbear .card-product-hover {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  padding: 10px;
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  transform: translateY(0%);
+  transition: 0.3s linear;
+}
+.container-fluid .product-topbear .product-card:hover .card-product-hover {
+  transform: translateY(100%);
+}
