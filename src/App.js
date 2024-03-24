@@ -11,6 +11,9 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Index />}></Route>
+		<Route path="/teddy-store/homePage" element={<Index />}></Route>
+        <Route path="/teddy-store/login" element={<Login />}></Route>
+        <Route path="/teddy-store/cart" element={<Cart />}></Route>
         <Route path="/teddy_store/register" element={<Register />}></Route>
         <Route path="/teddy_store/admin" element={<HomeAdmin />}></Route>
         <Route path="/teddy_store/admin/product_management" element={<HomeAdmin />}></Route>
