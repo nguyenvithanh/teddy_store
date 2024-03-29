@@ -7,6 +7,7 @@ import Checkout from "./components/user/Checkout.jsx";
 import DetailProduct from "./components/user/Detail_Product.jsx";
 import IndexAdmin from "./components/admin/index.jsx";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Thanks from "./components/user/Thanks.jsx";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/teddy-store/checkout" element={<Checkout />}></Route>
         <Route path="/teddy-store/register" element={<Register />}></Route>
         <Route path="/teddy-store/admin" element={<IndexAdmin />}></Route>
+        <Route path="/teddy-store/thanks" element={<Thanks />}></Route>
       </Routes>
     </BrowserRouter>
   );

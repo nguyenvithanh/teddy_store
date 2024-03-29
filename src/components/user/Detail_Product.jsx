@@ -1,13 +1,16 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
-import "../common/css/index-user.css";
-import "../common/css/Detail_product.css";
+import "./css/index-user.css";
+import "./css/Detail_product.css";
 import Navigation from "../common/nav.jsx";
 import Footer from "../common/footer.jsx";
 import TopBear from "./TopBear.jsx";
+import Describepro from "../user/Describe_Pro.jsx";
+import Servicepro from "../user/Service_pro.jsx";
+import Rate from "../user/Rate.jsx";
 import { Link, useParams } from "react-router-dom";
 import { UploadOutlined } from "@ant-design/icons";
-import { Button, Upload } from "antd";
+import { Button, Upload, Tabs } from "antd";
 
 export default function Detail_product() {
   const { id } = useParams();
@@ -23,7 +26,10 @@ export default function Detail_product() {
   const [ServicePro, setServicePro] = useState([]);
   const [selectedColor, setSelectedColor] = useState(null);
   const [quantity, setQuantity] = useState(1);
+  const [quantityy, setQuantityy] = useState(0);
   const [fileList, setFileList] = useState([]);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+
   useEffect(() => {
     const fetchProductDetail = async () => {
       try {
@@ -35,6 +41,7 @@ export default function Detail_product() {
           `http://localhost:7070/teddy-store/getRatePro/${id}`
         );
         setRatePro(RatePro.data);
+        console.log(RatePro);
         const ImgPro = await axios.get(
           `http://localhost:7070/teddy-store/getImgPro/${id}`
         );
@@ -51,14 +58,11 @@ export default function Detail_product() {
             return { productId: product.id, sizes: dataSize.data };
           })
         );
-
         const sizesByProductMap = {};
         sizesData.forEach((sizesObj) => {
           sizesByProductMap[sizesObj.productId] = sizesObj.sizes;
         });
-
         setSize(sizesByProductMap);
-
         const ServicePro = await axios.get(
           `http://localhost:7070/teddy-store/getProService/${id}`
         );
@@ -113,18 +117,29 @@ export default function Detail_product() {
       setQuantity(quantity + 1);
     }
   };
+  const handleChangeee = (event) => {
+    const newQuantity = parseInt(event.target.value);
+    if (!isNaN(newQuantity) && newQuantity >= 0 && newQuantity <= 2) {
+      setQuantityy(newQuantity);
+    }
+  };
+  const decreaseQuantityy = () => {
+    if (quantityy > 0) {
+      setQuantityy(quantityy - 1);
+    }
+  };
+
+  const increaseQuantityy = () => {
+    if (quantityy < 2) {
+      setQuantityy(quantityy + 1);
+    }
+  };
 
   const handleChangee = (info) => {
     let newFileList = [...info.fileList];
-
-    // 1. Limit the number of uploaded files
-    // Only to show two recent uploaded files, and old ones will be replaced by the new
     newFileList = newFileList.slice(-2);
-
-    // 2. Read from response and show file link
     newFileList = newFileList.map((file) => {
       if (file.response) {
-        // Component will show file.url as link
         file.url = file.response.url;
       }
       return file;
@@ -136,6 +151,10 @@ export default function Detail_product() {
     onChange: handleChangee,
     multiple: true,
   };
+  const handleThumbnailClick = (index) => {
+    setSelectedImageIndex(index);
+  };
+
   return (
     <>
       <div className="container-fluid p-0 m-0">
@@ -143,12 +162,14 @@ export default function Detail_product() {
         <div className="container">
           {products.map((products) => (
             <div className="row ms-5 mt-3">
-              <div key={products.id} className="col-6 col-lg-4">
-                <img
-                  src={`/img_pro/${products.img_url}`}
-                  className="img-p"
-                  alt=""
-                />
+              <div className="col-6 col-lg-4">
+                {imageUrls.length > 0 && (
+                  <img
+                    src={`/img_pro/${imageUrls[selectedImageIndex].img_url}`}
+                    className="img-p"
+                    alt=""
+                  />
+                )}
                 <div className="image-gallery">
                   <div className="images">
                     {imageUrls.map((imageUrl, index) => (
@@ -156,6 +177,7 @@ export default function Detail_product() {
                         key={index}
                         src={`/img_pro/${imageUrl.img_url}`}
                         alt=""
+                        onClick={() => handleThumbnailClick(index)}
                       />
                     ))}
                   </div>
@@ -211,7 +233,7 @@ export default function Detail_product() {
                     </h3>
                   )}
                 </div>
-                <div className="color">
+                <div className=" color">
                   <div className="colorr">
                     <p className="p mt-4">Màu sắc:</p>
                   </div>
@@ -230,7 +252,8 @@ export default function Detail_product() {
                   ))}
                 </div>
                 {/* Size */}
-                <div className="color mt-3">
+
+                <div className="color mt-3 ">
                   <div className="size">
                     <p className="s">Size</p>
                   </div>
@@ -303,16 +326,46 @@ export default function Detail_product() {
                     <div key={index} className="service">
                       <p>Dịch vụ:</p>
                       <button>{ServicePro.name}</button>
+                      <div className="quantity">
+                        <p className="p">Số lượng: </p>
+                        <div className="input-group">
+                          <button
+                            className="btn btn-outline-secondary pe-3"
+                            type="button"
+                            onClick={decreaseQuantityy}
+                          >
+                            -
+                          </button>
+                          <input
+                            type="number"
+                            className="form-control ps-4"
+                            value={quantityy}
+                            onChange={handleChangeee}
+                          />
+                          <button
+                            className="btn btn-outline-secondary"
+                            type="button"
+                            onClick={increaseQuantityy}
+                          >
+                            +
+                          </button>
+                        </div>
+                      </div>
                       <div className="price_service">
                         <p>Gía: </p>
-                        <h3>{ServicePro.priceSv.toLocaleString()} VND</h3>
+                        <h3>
+                          {(quantityy * ServicePro.priceSv).toLocaleString()}{" "}
+                          VND
+                        </h3>
                       </div>
                       <div className="notesv">
                         <p>Nội dung muốn thêu:</p>
                         <input
                           className="textt"
                           type="text"
-                          placeholder=" Nội dung bạn muốn thêu"
+                          placeholder=" VD:
+Mặt trước: Nội dung 1, màu ...
+Mặt sau: Nội dung 2, màu ..."
                         />
                         <div>
                           <p>
@@ -345,25 +398,42 @@ export default function Detail_product() {
                     <button>Mua ngay</button>
                   </div>
                 </div>
+                <h5 className="mt-3 ">Chat với chúng tôi để đc tư vấn</h5>
+                <div className="connectt">
+                  <div className="connect me-3">
+                    <a
+                      href="https://www.facebook.com/gaubongdepsaigon"
+                      className="facebook-icon"
+                    >
+                      <i className="fab fa-facebook me-2 ms-2"></i>
+                    </a>{" "}
+                    Chat Facebook
+                  </div>
+                  <div className="connect">
+                    <a href="https://chat.zalo.me/" className="zalo-icon">
+                      <i className="fab fa-facebook me-2 ms-2"></i>
+                    </a>
+                    Chat Zalo
+                  </div>
+                </div>
               </div>
             </div>
           ))}
         </div>
-        <div className="container mt-5">
-          {/* <Tabs defaultActiveKey="1" centered>
+        <div className="container mt-4">
+          <Tabs defaultActiveKey="1" centered>
             <Tabs.TabPane tab="Mô tả" key="1">
-              <Describe_pro />
+              <Describepro />
             </Tabs.TabPane>
             <Tabs.TabPane tab="Đánh giá" key="2">
-              <Service_pro />
-            </Tabs.TabPane>
-            <Tabs.TabPane tab="Dịch vụ" key="3">
               <Rate />
             </Tabs.TabPane>
+            <Tabs.TabPane tab="Dịch vụ" key="3">
+              <Servicepro />
+            </Tabs.TabPane>
           </Tabs>
- */}
         </div>
-        <div className="container p-0 my-5">
+        <div className="container p-0 my-3">
           <div className="title-topbear">
             <div className="title text-center">
               <h3 className="">Top gấu bán chạy</h3>

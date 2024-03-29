@@ -4,7 +4,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import Nav from "./common/nav";
 import Footer from "./common/footer";
-import "../components/common/css/login.css";
+import "../components/user/css/login.css";
 import LoginFaceBook from "./LoginFaceBook";
 
 export default function Login() {

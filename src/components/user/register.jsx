@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Navigation from "../common/nav.jsx";
 import Footer from "../common/footer.jsx";
-import "./css/register.css";
+import "./css/register.css"
 import userAPI from "../api/userAPI";
 import { Link, useNavigate } from "react-router-dom";
 import Modal from "react-bootstrap/Modal";
