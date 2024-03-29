@@ -7,7 +7,7 @@ import DataBear from "./DataBear.jsx";
 import ThuBong from "./ThuBong.jsx";
 import GauBongHoatHinh from "./GauBongHoatHinh";
 import { Link } from "react-router-dom";
-import "../common/css/index-user.css";
+import "./css/index-user.css";
 
 export default function Index() {
   return (

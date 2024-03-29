@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import "../common/css/index-admin.css";
+import "../admin/css/index-admin.css";
 import HomePage from './HomePage';
 import SVPageForm from '../admin/admin-service';
 import Adminorder from '../admin/admin-order';

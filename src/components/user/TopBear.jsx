@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import "../common/css/topBear.css";
+import "./css/topBear.css";
 import { Link } from "react-router-dom";
 
 export default function TopBear() {
