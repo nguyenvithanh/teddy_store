@@ -49,6 +49,10 @@
   color: var(--background);
   background-color: var(--base);
 }
+.product-card .card-body .button .btn.selected {
+  color: #ffffff;
+  background-color: #644c38;
+}
 .product-card .card-product-hover {
   position: absolute;
   top: 0;

@@ -1,5 +1,5 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -8,42 +8,61 @@ import { Link } from "react-router-dom";
 export default function GauBongHoatHinh() {
   const [dataBear, setDataBear] = useState([]);
   const [size, setSize] = useState({});
-  const [selectedSize, setSelectedSize] = useState(null);
-  const [selectedProductId, setSelectedProductId] = useState(null);
+  const [selectedSize, setSelectedSize] = useState({});
+  const [selectedPrice, setSelectedPrice] = useState({});
 
   const handleSizeClick = (productId, size) => {
-    setSelectedProductId(productId);
-    setSelectedSize(size);
-  };
-  const render = async () => {
-    try {
-      const dataProduct = await axios.get(
-        "http://localhost:7070/teddy-store/getAllProductWhere-Gau-Bong-Hoat-Hinh"
-      );
-      setDataBear(dataProduct.data);
-
-      const sizesData = await Promise.all(
-        dataProduct.data.map(async (product) => {
-          const dataSize = await axios.get(
-            `http://localhost:7070/teddy-store/getSizeBy/${product.id}`
-          );
-          return { productId: product.id, sizes: dataSize.data };
-        })
-      );
-
-      const sizesByProductMap = {};
-      sizesData.forEach((sizesObj) => {
-        sizesByProductMap[sizesObj.productId] = sizesObj.sizes;
-      });
-
-      setSize(sizesByProductMap);
-    } catch (error) {
-      console.error("Error loading bear:", error);
-    }
+    setSelectedSize((prevSelectedSize) => ({
+      ...prevSelectedSize,
+      [productId]: size,
+    }));
+    setSelectedPrice((prevSelectedPrice) => ({
+      ...prevSelectedPrice,
+      [productId]: size.price,
+    }));
   };
 
   useEffect(() => {
-    render();
+    const fetchData = async () => {
+      try {
+        const dataProduct = await axios.get(
+          "http://localhost:7070/teddy-store/getAllProductWhere-Gau-Bong-Hoat-Hinh"
+        );
+        setDataBear(dataProduct.data);
+
+        const sizesData = await Promise.all(
+          dataProduct.data.map(async (product) => {
+            const dataSize = await axios.get(
+              `http://localhost:7070/teddy-store/getSizeBy/${product.id}`
+            );
+            return { productId: product.id, sizes: dataSize.data };
+          })
+        );
+
+        const sizesByProductMap = {};
+        const initialPrices = {};
+        sizesData.forEach((sizesObj) => {
+          sizesByProductMap[sizesObj.productId] = sizesObj.sizes;
+          const firstSize = sizesObj.sizes[0];
+          if (firstSize) {
+            initialPrices[sizesObj.productId] = firstSize.price;
+            setSelectedSize((prevSelectedSize) => ({
+              ...prevSelectedSize,
+              [sizesObj.productId]: firstSize,
+            }));
+            setSelectedPrice((prevSelectedPrice) => ({
+              ...prevSelectedPrice,
+              [sizesObj.productId]: firstSize.price,
+            }));
+          }
+        });
+        setSize(sizesByProductMap);
+      } catch (error) {
+        console.error("Error loading bear:", error);
+      }
+    };
+
+    fetchData();
   }, []);
 
   const settings = {
@@ -70,7 +89,11 @@ export default function GauBongHoatHinh() {
                   <Link type="submit" className="btn mx-2 btn-primary">
                     <i className="fa-solid fa-bag-shopping"></i>
                   </Link>
-                  <Link type="submit" className="btn mx-2 btn-primary">
+                  <Link
+                    type="submit"
+                    className="btn mx-2 btn-primary"
+                    to={`/detail_products/${product.id}`}
+                  >
                     <i className="fa-regular fa-eye"></i>
                   </Link>
                   <Link type="submit" className="btn mx-2 btn-primary">
@@ -80,18 +103,20 @@ export default function GauBongHoatHinh() {
               </div>
               <div className="card-body">
                 <h5 className="card-title">{product.name}</h5>
-                {size[product.id]?.map((size) => (
-                  <div key={size.id}>
-                    {selectedProductId === product.id &&
-                      selectedSize &&
-                      selectedSize.id === size.id && (
+                {size[product.id]?.map((sizeItem) => (
+                  <div key={sizeItem.id}>
+                    {selectedSize[product.id] &&
+                      selectedSize[product.id].id === sizeItem.id && (
                         <div className="price-product mb-2">
-                          {size.price != null && (
+                          {selectedPrice[product.id] != null && (
                             <p className="card-text">
-                              {size.price.toLocaleString("vi-VN", {
-                                style: "currency",
-                                currency: "VND",
-                              })}
+                              {selectedPrice[product.id].toLocaleString(
+                                "vi-VN",
+                                {
+                                  style: "currency",
+                                  currency: "VND",
+                                }
+                              )}
                             </p>
                           )}
                         </div>
@@ -99,19 +124,27 @@ export default function GauBongHoatHinh() {
                   </div>
                 ))}
                 <div className="row">
-                  {size[product.id]?.map((size) => (
+                  {size[product.id]?.map((sizeItem) => (
                     <div
                       className="mx-1 col-12 col-sm-3 col-md-3 col-lg-3"
-                      key={size.id}
+                      key={sizeItem.id}
                     >
                       <div className="size-product">
                         <div className="button">
                           <button
+
                             type="button"
-                            className="btn mx-2 mb-2"
-                            onClick={() => handleSizeClick(product.id, size)}
+                            className={`btn mx-2 mb-2 ${
+                              selectedSize[product.id] &&
+                              selectedSize[product.id].id === sizeItem.id
+                                ? "selected"
+                                : ""
+                            }`}
+                            onClick={() =>
+                              handleSizeClick(product.id, sizeItem)
+                            }
                           >
-                            {size.size_no}
+                            {sizeItem.size_no}
                           </button>
                         </div>
                       </div>

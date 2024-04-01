@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
-import "../common/css/index-admin.css";
-import HomePage from './HomePage';
-import SVPageForm from '../admin/admin-service';
-import Adminorder from '../admin/admin-order';
-import logoHeader from "../../assets/XINH_logohedear.png";
-import { HomeOutlined, SolutionOutlined,IdcardOutlined } from '@ant-design/icons';
-import { Breadcrumb, Layout, Menu, theme } from 'antd'; 
+import "../admin/css/index-admin.css";
+import HomePageForm from './HomePage';
+import { HomeOutlined } from '@ant-design/icons';
+import { Breadcrumb, Layout, Menu, theme } from 'antd';
+import './css/style.css';
+import logoHeader from "./images/XINH_logoheader.png"
+import SizeColorPageForm from './Manage_size_and_color';
+import CategoryPageForm from './Manage_product_categories';
+import ProductPageForm from './Product_management';
+import AllProductPageForm from './All_products';
+import DiscountPageForm from './Discount';
 const { Header, Content, Footer, Sider } = Layout;
 function getItem(label, key, icon, children) {
     return {
@@ -17,7 +21,7 @@ function getItem(label, key, icon, children) {
 }
 const items = [
     getItem('Trang chủ', '1', <HomeOutlined />),
-    getItem('Quản lý', 'sub1', <SolutionOutlined />, [
+    getItem('Quản lý', 'sub1', <HomeOutlined />, [
         getItem('Quản lý hàng hóa', '2'),
         getItem('Quản lý size và màu', '3'),
         getItem('Quản lý sản phẩm', '4'),
@@ -25,16 +29,16 @@ const items = [
         getItem('Giảm giá', '6'),
         getItem('Dịch vụ', '7'),
     ]),
-    getItem('Quản lý khách hàng', 'sub2', <IdcardOutlined />, [
+    getItem('Quản lý khách hàng', 'sub2', <HomeOutlined />, [
         getItem('Tom', '8'),
         getItem('Bill', '9'),
         getItem('Alex', '10'),
     ]),
-    getItem('Quản lý đơn hàng', '11', <HomeOutlined />),
-    getItem('Hỗ trợ và liên hệ', 'sub3', <HomeOutlined />, [getItem('Team 1', '12'), getItem('Team 2', '13')]),
-    getItem('Quản lý đơn hàng', 'sub4', <HomeOutlined />, [getItem('Team 1', '14'), getItem('Team 2', '15')]),
-    getItem('Quản lý đơn hàng', 'sub5', <HomeOutlined />, [getItem('Team 1', '16'), getItem('Team 2', '17')]),
-    getItem('Quản lý đơn hàng', 'sub6', <HomeOutlined />, [getItem('Team 1', '18'), getItem('Team 2', '19')]),
+    getItem('Quản lý đơn hàng', 'sub3', <HomeOutlined />, [getItem('Team 1', '11'), getItem('Team 2', '12')]),
+    getItem('Hỗ trợ và liên hệ', 'sub4', <HomeOutlined />, [getItem('Team 1', '13'), getItem('Team 2', '14')]),
+    getItem('Quản lý đơn hàng', 'sub5', <HomeOutlined />, [getItem('Team 1', '15'), getItem('Team 2', '16')]),
+    getItem('Quản lý đơn hàng', 'sub6', <HomeOutlined />, [getItem('Team 1', '17'), getItem('Team 2', '18')]),
+    getItem('Quản lý đơn hàng', 'sub7', <HomeOutlined />, [getItem('Team 1', '19'), getItem('Team 2', '20')]),
 ];
 const Indexadmin = () => {
     const [collapsed, setCollapsed] = useState(false);
@@ -43,16 +47,22 @@ const Indexadmin = () => {
     } = theme.useToken();
     const [selectedMenuItem, setSelectedMenuItem] = useState('1');
 
+
     const handleMenuItemClick = (item) => {
         setSelectedMenuItem(item);
     };
     const formComponents = {
-        '1': <HomePage/>,
-        '2': <SVPageForm />,
-        '11': <Adminorder />,
+        '1': <HomePageForm />,
+        '2': <CategoryPageForm/>,
+        '3': <SizeColorPageForm />,
+        '4': <ProductPageForm/>,
+        '5': <AllProductPageForm/>,
+        '6': <DiscountPageForm/>
         // Thêm các item khác nếu cần
     };
-    
+
+
+   
     const renderBreadcrumb = () => {
         switch (selectedMenuItem) {
             case '1':
@@ -61,11 +71,15 @@ const Indexadmin = () => {
                 );
 
 
+
+
             case '2':
                 return (
                     <Breadcrumb.Item>Quản lý</Breadcrumb.Item>
 
+
                 );
+
 
             // Add more cases for other menu items if needed
             default:
@@ -74,7 +88,6 @@ const Indexadmin = () => {
                 );
         }
     };
-  
     return (
         <Layout style={{ minHeight: '100vh', }}>
             <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)} style={{ padding: 0, marginRight: 30 }}
@@ -82,11 +95,12 @@ const Indexadmin = () => {
                 <div className="demo-logo-vertical" /><a href="/" className=" ">
                     <img src={logoHeader} className="img-fluid " alt="Logo" />
                 </a>
-                <Menu defaultSelectedKeys={['1']} mode="inline" items={items} onClick={({ key }) => handleMenuItemClick(key)} />
+                <Menu theme="light" defaultSelectedKeys={['1']} mode="inline" items={items} onClick={({ key }) => handleMenuItemClick(key)} />
+
 
             </Sider>
             <Layout>
-                <Header style={{ padding: 0, background: colorBgContainer, }} 
+                <Header style={{ padding: 0, background: colorBgContainer, }}
                 >
                 {/* <Space direction="vertical">  
                     <Search placeholder="input search text" onSearch={onSearch} enterButton />  
@@ -105,15 +119,19 @@ const Indexadmin = () => {
                     </Breadcrumb>
                     <div
                         style={{
+                            padding: 24,
+                            minHeight: 360,
                             background: colorBgContainer,
                             borderRadius: borderRadiusLG,
                         }}
 
+
                     >
-                        <div style={{ padding: 20, minHeight: 360, background: '#fff' }}>
+                        <div style={{ padding: 24, minHeight: 360, background: '#fff' }}>
                         {formComponents[selectedMenuItem]}
                         </div>
                     </div>
+
 
                 </Content>
                 <Footer
@@ -128,3 +146,36 @@ const Indexadmin = () => {
     );
 };
 export default Indexadmin;
+
+
+// import React from 'react';
+// import { Form } from 'antd';
+
+
+// const HomePageForm = () => {
+//     return (
+//         <Form title="Trang chủ">
+//             <Form.Item>Quản lý hàng hóa</Form.Item>
+//         </Form>
+//     );
+// };
+
+
+// export default HomePageForm;
+
+
+// import React from 'react';
+// import { Form } from 'antd';
+
+
+// const HomePageForm = () => {
+//     return (
+//         <Form title="Trang chủ">
+//             <Form.Item>Trang chủ</Form.Item>
+//         </Form>
+//     );
+// };
+
+
+// export default HomePageForm;
+
