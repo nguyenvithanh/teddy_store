@@ -3,7 +3,6 @@ import axios from "axios";
 const axiosClient = axios.create({
     baseURL: "http://localhost:7070/teddy-store/",
 });
-
 // Add a request interceptor
 axiosClient.interceptors.request.use(
     function (config) {
@@ -14,7 +13,6 @@ axiosClient.interceptors.request.use(
         return Promise.reject(error);
     }
 );
-
 // Add a response interceptor
 axiosClient.interceptors.response.use(
     function (res) {

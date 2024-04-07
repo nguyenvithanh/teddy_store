@@ -15,7 +15,6 @@ export default function Register() {
     const [messageEmailInvalid, setMessageEmailInvalid] = useState('Email không hợp lệ');
     const [messageUsernameInvalid, setMessageUsernameInvalid] = useState('Vui lòng nhập nhập tên đăng nhập.');
 
-
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
@@ -184,7 +183,7 @@ export default function Register() {
 
         return false;
     };
-
+ 
     return (<>
         <div className="container-fluid p-0 m-0">
             <div className="container-fluid">{<Navigation />}</div>
@@ -315,6 +314,11 @@ export default function Register() {
                             {isPasswordValid || !passwordTouched ? null : (
                                 <div className="invalid">
                                     Vui lòng nhập mật khẩu
+                                </div>
+                            )}
+                               {nameTouched && isPasswordSpecialChar&& (
+                                <div className="invalid mb-0">
+                                    Mật khẩu không được chứa kí tự đặc biệt
                                 </div>
                             )}
                         </div>

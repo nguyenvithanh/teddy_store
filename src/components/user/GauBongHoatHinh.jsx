@@ -89,11 +89,7 @@ export default function GauBongHoatHinh() {
                   <Link type="submit" className="btn mx-2 btn-primary">
                     <i className="fa-solid fa-bag-shopping"></i>
                   </Link>
-                  <Link
-                    type="submit"
-                    className="btn mx-2 btn-primary"
-                    to={`/detail_products/${product.id}`}
-                  >
+                  <Link type="submit" className="btn mx-2 btn-primary">
                     <i className="fa-regular fa-eye"></i>
                   </Link>
                   <Link type="submit" className="btn mx-2 btn-primary">

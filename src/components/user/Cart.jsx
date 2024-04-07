@@ -1,4 +1,4 @@
-import "../common/css/cart.css"
+import "../user/css/cart.css";
 import axios from "axios";
 import Swal from "sweetalert2";
 import Nav from "../common/nav";
@@ -134,6 +134,7 @@ export default function Cart() {
 
   return (
     <>
+    
       <div className="container-fluid p-0 m-0">{<Nav />}</div>
       <div className="cart container my-5">
         <h4>Giỏ hàng của bạn</h4>
@@ -245,7 +246,7 @@ export default function Cart() {
                         </button>
                       </td>
                     </tr>
-                    <tr style={{borderBottom: "1px solid rgb(218 214 214)"}}>
+                    <tr>
                       <td style={{ width: "40%" }} className="text-start">
                         Dịch vụ kèm:
                         <span className="name-service mx-2">
@@ -253,19 +254,17 @@ export default function Cart() {
                         </span>
                       </td>
                       <td>
-                        <div className="container d-flex">
-                          <button type="button" className="btn">
-                            <i className="fa-solid fa-minus"></i>
-                          </button>
-                          <input
-                            type="text"
-                            className="quantity"
-                            defaultValue={cartItem.quantity_ser}
-                          />
-                          <button type="button" className="btn">
-                            <i className="fa-solid fa-plus"></i>
-                          </button>
-                        </div>
+                        <button type="button" className="btn">
+                          <i className="fa-solid fa-minus"></i>
+                        </button>
+                        <input
+                          type="text"
+                          className="quantity"
+                          defaultValue={cartItem.quantity_ser}
+                        />
+                        <button type="button" className="btn">
+                          <i className="fa-solid fa-plus"></i>
+                        </button>
                       </td>
                       <td className="mb-5">
                         {cartItem.price_ser.toLocaleString("vi-VN", {

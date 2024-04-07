@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
-import "../common/css/index-user.css";
-import "../common/css/Detail_product.css";
+import "../user/css/index-user.css";
+import "../user/css/Detail_product.css";
 import Navigation from "../common/nav.jsx";
 import Footer from "../common/footer.jsx";
 import TopBear from "./TopBear.jsx";
@@ -140,11 +140,7 @@ export default function Detail_product() {
     }
     const id_size = selectedSize.id;
     const id_color = selectedColor.id;
-    const color = selectedColor.color;
-    const price_pro = selectedSize.price_sale;
-    // const name_ser =;
-    // const price_ser = se
-    console.log(price_pro)
+    console.log(id_color)
     console.log(id_size)
     const user = JSON.parse(localStorage.getItem('userProfile')); // Lấy thông tin user từ localStorage
     if (!user || !user.id) {
@@ -176,25 +172,16 @@ export default function Detail_product() {
         console.log(id_dt)
         // Tiếp tục xử lý dữ liệu nhận được, ví dụ: thêm vào giỏ hàng
         const cartData = {
-          0: {
-            id: generateRandomNumber().toString(),
-            id_acc: id_acc,
-            id_dt_pro: id_dt,
-            id_ser: selectedProductServiceIds,
-            color: color || "No Color",
-            date_add: formattedDate,
-            image_pro: products[0].img_url, // assuming products is an array and you want to take the first product's image_url
-            name_pro: products[0].name, // assuming products is an array and you want to take the first product's name
-            name_ser: "Thêu", // Assuming this is fixed for all services or you have a specific way to get this data
-            price_pro: price_pro,
-            price_ser: ServicePro[0].priceSv, // Assuming ServicePro is an array and you want to take the first service's priceSv
-            quantity_pro: quantity,
-            quantity_ser: 0, // Assuming no quantity for services in your initial data
-            size_no: selectedSize.size_no
-          }
+          id: generateRandomNumber().toString(),
+          quantity_pro: quantity,
+          quantity_ser: quantityy,
+          date_add: formattedDate,
+          service: { id: selectedProductServiceIds },
+          detailsProduct: { id: id_dt },
+          account: { id: id_acc }
         };
         localStorage.setItem('itemSelected', JSON.stringify(cartData));
-        navigate('/teddy-store/checkout');
+        
       })
       
       .catch(error => {
@@ -202,7 +189,7 @@ export default function Detail_product() {
         console.error('Đã xảy ra lỗi khi thêm vào giỏ hàng:', error);
       });
       
-      
+      navigate('/teddy-store/checkout');
   };
   const handleChangee = (info) => {
     let newFileList = [...info.fileList];
@@ -330,7 +317,7 @@ export default function Detail_product() {
                         <i key={index} className={`bi bi-star${index < ratePros.star_no ? '-fill' : ''}`}></i>
                       ))}
                       <p>|</p>
-                      <h6>{ratePros.number_rate} Đánh giá</h6> 
+                      <h6>{ratePros.number_rate} Đánh giá</h6>
                       <p>|</p>
                       <h6>{ratePros.quantity} Đã bán</h6>
                     </div>

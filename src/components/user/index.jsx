@@ -7,7 +7,7 @@ import DataBear from "./DataBear.jsx";
 import ThuBong from "./ThuBong.jsx";
 import GauBongHoatHinh from "./GauBongHoatHinh";
 import { Link } from "react-router-dom";
-import "../common/css/index-user.css";
+import "./css/index-user.css";
 
 export default function Index() {
   return (
@@ -49,7 +49,7 @@ export default function Index() {
               <Link>
                 <img
                   src="/img_pro/theu-ao.jpg"
-                  alt=""
+                  alt="hi"
                   width={"100%"}
                   style={{ borderRadius: "10px" }}
                 />
@@ -63,6 +63,7 @@ export default function Index() {
             <Link className="img-fluid">
               <img
                 src="/img_pro/teddy-cc.png"
+                alt="đf"
                 style={{ borderRadius: "10px" }}
               />
             </Link>
@@ -89,7 +90,7 @@ export default function Index() {
             <Link className="img-fluid">
               <img
                 src="/img_pro/gau-bong-hoat-hinh.jpg"
-                alt=""
+                alt="ádsafasd"
                 style={{ borderRadius: "10px" }}
               />
             </Link>
@@ -115,7 +116,7 @@ export default function Index() {
             <div className="row p-0 m-0">
               <div className="px-5 col-12 col-sm-6 col-md-4 col-lg-4">
                 <div className="card p-4">
-                  <img src="/img_pro/thubong_cho_shiba.jpg" />
+                  <img src="/img_pro/thubong_cho_shiba.jpg" alt="kjasd"/>
                   <div className="card-body">
                     <h5 className="card-title p-0 m-0">
                       Top những gấu bông được yêu thích nhất
@@ -133,7 +134,7 @@ export default function Index() {
               </div>
               <div className="px-5 col-12 col-sm-6 col-md-4 col-lg-4">
                 <div className="card p-4">
-                  <img src="/img_pro/thubong_cho_shiba.jpg" />
+                  <img src="/img_pro/thubong_cho_shiba.jpg" alt="al;ksdn;f"/>
                   <div className="card-body">
                     <h5 className="card-title p-0 m-0">
                       Top những gấu bông được yêu thích nhất
@@ -151,7 +152,7 @@ export default function Index() {
               </div>
               <div className="px-5 col-12 col-sm-6 col-md-4 col-lg-4">
                 <div className="card p-4">
-                  <img src="/img_pro/thubong_cho_shiba.jpg" />
+                  <img src="/img_pro/thubong_cho_shiba.jpg" alt="á;kljldnfa"/>
                   <div className="card-body">
                     <h5 className="card-title p-0 m-0">
                       Top những gấu bông được yêu thích nhất

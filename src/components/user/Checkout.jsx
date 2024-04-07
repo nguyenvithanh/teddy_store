@@ -3,7 +3,7 @@ import Footer from "../common/footer";
 import Nav from "../common/nav";
 import Swal from "sweetalert2";
 import axios from "axios";
-import "../common/css/checkout.css";
+import "../user/css/checkout.css";
 import ReactModal from "react-modal";
 import { useNavigate } from "react-router-dom";
 
@@ -30,8 +30,6 @@ export default function Checkout() {
   const amount = useRef(null);
   const id_dt_pro = useRef(null);
   const id_ser = useRef(null);
- 
-  console.log(productSelected)
 
   const generateRandomNumbers = () => {
     const min = 1000000000;
@@ -157,69 +155,40 @@ export default function Checkout() {
 
   const addNewOrder = async (dataOrder) => {
     try {
-      const response = await axios.post(
+      await axios.post(
         "http://localhost:7070/teddy-store/addNewOrder",
         dataOrder
       );
-      if (response.statusCode === 200) {
-        Swal.fire({
-          icon: "success",
-          title: "Đặt hàng thành công!",
-          showConfirmButton: false,
-          timer: 3000,
-        });
-      }
     } catch (error) {
       console.error("Lỗi khi thực hiện yêu cầu đặt hàng:", error);
-      throw error;
     }
   };
 
-  const handleConfirmAddNewOrder = async (event) => {
-    event.preventDefault();
-
+  const addNewOrderDetail = async (detailOrderData) => {
     try {
-      const currentDate = new Date();
-      const year = currentDate.getFullYear();
-      const month = (currentDate.getMonth() + 1).toString().padStart(2, "0");
-      const day = currentDate.getDate().toString().padStart(2, "0");
-      const formattedDate = `${year}-${month}-${day}`;
-      const dataOrder = {
-        id: id.toString(),
-        account: {
-          id: userProfile.id,
-        },
-        date_order: formattedDate,
-        status: "Đặt thành công",
-      };
-      await addNewOrder(dataOrder);
-      await handleConfirmAddNewOrderDetail(dataOrder.id);
-    } catch (error) {
-      console.error("Lỗi khi thêm đơn đặt hàng mới:", error);
-    }
-  };
-  const handleConfirmAddNewOrderDetail = async (orderId) => {
-    try {
-      const price_proString = price_unit.current.value;
-      const price_serString = price_unit_ser.current.value;
-      const amountString = amount.current.value;
-      const priceNumber = parseFloat(price_proString.replace(/[^\d.,]/g, ""));
-      const priceSerNumber = parseFloat(
-        price_serString.replace(/[^\d.,]/g, "")
+      await axios.post(
+        "http://localhost:7070/teddy-store/addNewOrderDetail",
+        detailOrderData
       );
-      const amountNumber = parseFloat(amountString.replace(/[^\d.,]/g, ""));
+    } catch (error) {
+      console.log("Error: " + error);
+    }
+  };
+
+  const handleConfirmAddNewOrderDetail = async (idOrđer) => {
+    try {
       const detailOrderData = {
         id: id.toString(),
         quantity_pro: quantity_pro.current.value,
-        price_unit: priceNumber * 1000,
+        price_unit: parseFloat(price_unit.current.value),
         quantity_ser: quantity_ser.current.value,
-        price_unit_ser: priceSerNumber * 1000,
+        price_unit_ser: parseFloat(price_unit_ser.current.value),
         address: address.current.value,
         note: note.current.value,
         method_payment: selectMethodPayment,
-        amount: amountNumber * 1000,
+        amount: parseInt(amount.current.value),
         order: {
-          id: orderId,
+          id: idOrđer,
         },
         detailsProduct: {
           id: id_dt_pro.current.value,
@@ -247,38 +216,10 @@ export default function Checkout() {
           timer: 3000,
         });
       } else if (selectMethodPayment === "VNP") {
-        getPaymentUrl(orderId);
-        await addNewOrderDetail(detailOrderData);
+        getPaymentUrl(amount);
       }
     } catch (error) {
-      console.log("Error adding order detail" + error);
-      throw new Error("Error adding order detail");
-    }
-  };
-
-  const addNewOrderDetail = async (detailOrderData) => {
-    try {
-      const response = await axios.post(
-        "http://localhost:7070/teddy-store/addNewOrderDetail",
-        detailOrderData
-      );
-      if (response.status === 200) {
-        Swal.fire({
-          icon: "success",
-          title: "Đặt hàng thành công!",
-          showConfirmButton: false,
-          timer: 3000,
-        });
-      } else {
-        Swal.fire({
-          icon: "error",
-          title: "Đặt hàng thất bại!",
-          showConfirmButton: false,
-          timer: 3000,
-        });
-      }
-    } catch (error) {
-      console.log("Error: " + error);
+      console.log("Error adding order" + error);
     }
   };
 
@@ -286,13 +227,11 @@ export default function Checkout() {
     window.location.href = paymentUrl;
   };
 
-  const getPaymentUrl = async (orderId) => {
+  const getPaymentUrl = async (amount) => {
     try {
-      const amountString = amount.current.value;
-      const amountNumber = parseInt(amountString.replace(/[^\d]/g, ""), 10);
-      const amountCurrency = amountNumber;
       const response = await axios.get(
-        `http://localhost:7070/teddy-store/VNPay?amountValue=${amountCurrency}&orderId=${orderId}`
+        `http://localhost:7070/teddy-store/VNPay?amount=${amount}`,
+        amount
       );
       if (response.status === 200) {
         const paymentUrl = response.data;
@@ -302,6 +241,33 @@ export default function Checkout() {
       }
     } catch (error) {
       console.log("Error getting payment url" + error);
+    }
+  };
+
+  const handleConfirmAddNewOrder = async (event) => {
+    event.preventDefault();
+
+    try {
+      const currentDate = new Date();
+      const year = currentDate.getFullYear();
+      const month = (currentDate.getMonth() + 1).toString().padStart(2, "0");
+      const day = currentDate.getDate().toString().padStart(2, "0");
+
+      const formattedDate = `${year}-${month}-${day}`;
+      const dataOrder = {
+        id: id.toString(),
+        account: userProfile.id,
+        date_order: formattedDate,
+        status: "Đặt thành công",
+      };
+      const result = await handleConfirmAddNewOrderDetail(dataOrder.id);
+      if (result) {
+        await addNewOrder(dataOrder);
+      } else {
+        return;
+      }
+    } catch (error) {
+      console.error("Lỗi khi thêm đơn đặt hàng mới:", error);
     }
   };
 
