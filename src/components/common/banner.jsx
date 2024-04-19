@@ -18,14 +18,14 @@ export default function banner() {
   };
   return (
     <>
-      <div className="wrapper p-0 mx-0 mb-1">
+      <div className=" mt-3 container wrapper p-0 mx-auto mb-1">
         <Slider {...settings} className="slide">
-            <Link href="/"  className="m-0 p-0">
-              <img src={Banner} alt="" className="img-fluid" />
-            </Link>
-            <Link href="/" className="m-0 p-0">
-              <img src={Banner1} alt="" className="img-fluid"/>
-            </Link>
+          <Link href="/" className="m-0 p-0">
+            <img src={Banner} alt="" className="img-fluid" />
+          </Link>
+          <Link href="/" className="m-0 p-0">
+            <img src={Banner1} alt="" className="img-fluid" />
+          </Link>
         </Slider>
       </div>
       <div className="article d-flex justify-content-center p-0 mt-5">

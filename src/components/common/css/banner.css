@@ -2,16 +2,20 @@
   padding: 0;
   margin: 0;
 }
+
 :root {
   --base: #644c38;
 }
+
 .wrapper img {
   border-radius: 1rem;
 }
+
 .article .card {
   border: none;
   color: var(--base);
 }
+
 .article .card i {
   font-size: 2rem;
   padding: 1rem 0;

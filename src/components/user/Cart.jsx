@@ -134,13 +134,12 @@ export default function Cart() {
 
   return (
     <>
-    
       <div className="container-fluid p-0 m-0">{<Nav />}</div>
       <div className="cart container my-5">
         <h4>Giỏ hàng của bạn</h4>
         <div className="row mt-4">
-          <div className="col-md-9">
-            <table className="table table-borderless">
+          <div className="col-md-9 card-cart">
+            <table className="table my-5">
               <thead className="text-center align-middle">
                 <tr>
                   <td colSpan={2}>
@@ -254,17 +253,19 @@ export default function Cart() {
                         </span>
                       </td>
                       <td>
-                        <button type="button" className="btn">
-                          <i className="fa-solid fa-minus"></i>
-                        </button>
-                        <input
-                          type="text"
-                          className="quantity"
-                          defaultValue={cartItem.quantity_ser}
-                        />
-                        <button type="button" className="btn">
-                          <i className="fa-solid fa-plus"></i>
-                        </button>
+                        <div className="container d-flex">
+                          <button type="button" className="btn">
+                            <i className="fa-solid fa-minus"></i>
+                          </button>
+                          <input
+                            type="text"
+                            className="quantity"
+                            defaultValue={cartItem.quantity_ser}
+                          />
+                          <button type="button" className="btn">
+                            <i className="fa-solid fa-plus"></i>
+                          </button>
+                        </div>
                       </td>
                       <td className="mb-5">
                         {cartItem.price_ser.toLocaleString("vi-VN", {
