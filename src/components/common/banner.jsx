@@ -1,13 +1,14 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./css/banner.css";
-import Banner from "../../assets/banner.jpg";
-import Banner1 from "../../assets/banner-1.jpg";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { Link } from "react-router-dom";
+import bannerAPI from "../api/bannerAPI";
+import Banner2 from "../../assets/banner.jpg";
+import Banner1 from "../../assets/banner-1.jpg";
 
-export default function banner() {
+const Banner = () => {
   const settings = {
     dots: true,
     infinite: true,
@@ -16,16 +17,25 @@ export default function banner() {
     slidesToScroll: 1,
     autoplay: true,
   };
+  const [banners, setBanners] = useState([]);
+  useEffect(() => {
+    const fetchBanner = async () => {
+      const result = await bannerAPI.getBanners();
+      setBanners([...result]);
+    };
+    fetchBanner();
+  }, []);
+  console.log(banners);
   return (
     <>
-      <div className=" mt-3 container wrapper p-0 mx-auto mb-1">
+      <div className="wrapper p-0 mx-0 mb-1">
         <Slider {...settings} className="slide">
-          <Link href="/" className="m-0 p-0">
-            <img src={Banner} alt="" className="img-fluid" />
-          </Link>
-          <Link href="/" className="m-0 p-0">
-            <img src={Banner1} alt="" className="img-fluid" />
-          </Link>
+          {banners.length > 0 &&
+            banners.map((banner) => (
+              <Link href="/" className="m-0 p-0" key={banner.id}>
+                <img src={banner?.url || ""} alt="banner" />
+              </Link>
+            ))}
         </Slider>
       </div>
       <div className="article d-flex justify-content-center p-0 mt-5">
@@ -79,4 +89,6 @@ export default function banner() {
       </div>
     </>
   );
-}
+};
+
+export default Banner;
