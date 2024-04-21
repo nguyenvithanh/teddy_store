@@ -18,31 +18,37 @@
   margin-top: 20px;
   margin-bottom: 20px;
 }
-.ant-card .ant-card-body {
+.ant-card .ant-card-body { 
   border-radius: 7px;
 }
 .ant-card-body {
-  display: flex;
+  text-align: center;
   color: #644c38;
 
   background-color: #f5f5f5;
 }
 .icon1 > span {
   font-size: 24px;
-  color: #ef4f4f; /* Đặt kích thước cho icon */
+  color: #634BF8; /* Đặt kích thước cho icon */
 }
 .icon2 > span {
   font-size: 24px;
-  color: #209c58; /* Đặt kích thước cho icon */
+  color: #644C38; /* Đặt kích thước cho icon */
 }
 .icon3 > span {
   font-size: 24px;
-  color: #db9526; /* Đặt kích thước cho icon */
+  color: #DB9526; /* Đặt kích thước cho icon */
+}
+.icon4 > span {
+  font-size: 24px;
+  color: #FF012F; /* Đặt kích thước cho icon */
 }
 .icon1 {
   text-align: center;
+  margin-left: 65px;
+  margin-bottom: 10px;
   padding-top: 23px;
-  background-color: #fac6c6;
+  background-color: #8277FF29;
   width: 70px;
   height: 70px;
   border-radius: 60px;
@@ -51,20 +57,35 @@
 .icon2 {
   text-align: center;
   padding-top: 23px;
-  background-color: #d0f4e1;
+  background-color: #FFE5CF;
   width: 70px;
   height: 70px;
   border-radius: 60px;
-  margin-right: 15px; /* Khoảng cách giữa icon và content */
+  margin-right: 15px;
+  margin-left: 65px;
+  margin-bottom: 10px; /* Khoảng cách giữa icon và content */
 }
 .icon3 {
   text-align: center;
   padding-top: 23px;
-  background-color: rgb(247, 223, 186);
+  background-color: #FFBF5C4D;
   width: 70px;
   height: 70px;
   border-radius: 60px;
-  margin-right: 15px; /* Khoảng cách giữa icon và content */
+  margin-right: 15px; 
+  margin-left: 65px;
+  margin-bottom: 10px;/* Khoảng cách giữa icon và content */
+}
+.icon4 {
+  text-align: center;
+  padding-top: 23px;
+  background-color: #B4475A29;
+  width: 70px;
+  height: 70px;
+  border-radius: 60px;
+  margin-right: 15px; 
+  margin-left: 65px;
+  margin-bottom: 10px;/* Khoảng cách giữa icon và content */
 }
 .ant-layout {
   padding: 0;
@@ -141,24 +162,23 @@
   padding: 8px;
   border-top: 1px;
   border-left: 1px;
-  border-right: 1px;
-  text-align: center;
+  border-right: 1px; 
 }
 .sanpham {
-  width: 100%;
+  width: 100%; 
 }
 
 /* Định dạng cho ô */
-z .sanpham th {
-  padding: 8px;
-  text-align: center;
+.sanpham>th {
+  
+  padding: 8px; 
   border-top: 1px;
   border-left: 1px;
   border-right: 1px;
 }
 .sanpham td {
-  padding: 8px;
-  text-align: center;
+  
+  padding: 8px; 
   border-top: 1px;
   border-left: 1px;
   border-right: 1px;
@@ -233,4 +253,25 @@ z .sanpham th {
 .cusotmer__btn-next {
   border-end-start-radius: 0 !important;
   border-top-left-radius: 0 !important;
+}
+.ant-layout-header {
+  
+  height: 90px !important; 
+}
+.ant-layout-header>div{
+  margin-top: 15px;
+  margin-left: 50px;
+  color: #644C38;
+}
+.thongbao{  
+  font-size: larger;
+  color: #644C38; 
+}
+.img_sp{
+  text-align: center;
+}
+.img_sp>img{
+  width: 70px;
+  height: 70px;
+  
 }

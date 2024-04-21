@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "../admin/css/index-admin.css";
 import HomePageForm from "./HomePage";
-import { HomeOutlined } from "@ant-design/icons";
+import { HomeOutlined, ProfileOutlined, CommentOutlined, AreaChartOutlined, UserOutlined, SettingOutlined, AppstoreOutlined ,BellOutlined} from "@ant-design/icons";
 import { Breadcrumb, Layout, Menu, theme } from "antd";
 import "./css/style.css";
 import logoHeader from "./images/XINH_logoheader.png";
@@ -24,7 +24,7 @@ function getItem(label, key, icon, children) {
 }
 const items = [
   getItem("Trang chủ", "1", <HomeOutlined />),
-  getItem("Quản lý", "sub1", <HomeOutlined />, [
+  getItem("Quản lý", "sub1", <AppstoreOutlined />, [
     getItem("Quản lý hàng hóa", "2"),
     getItem("Quản lý size và màu", "3"),
     getItem("Quản lý sản phẩm", "4"),
@@ -32,27 +32,11 @@ const items = [
     getItem("Giảm giá", "6"),
     getItem("Dịch vụ", "7"),
   ]),
-  getItem("Quản lý khách hàng", "sub2", <HomeOutlined />, [
-    getItem("Danh sách khách hàng", "8"),
-  ]),
-  getItem("Quản lý đơn hàng", "sub3", <HomeOutlined />, [
-    getItem("Team 1", "11"),
-    getItem("Team 2", "12"),
-  ]),
-  getItem("Hỗ trợ và liên hệ", "sub4", <HomeOutlined />, [
-    getItem("Team 1", "13"),
-    getItem("Team 2", "14"),
-  ]),
-  getItem("Đánh giá sản phẩm", "sub5", <HomeOutlined />, [
-    getItem("Danh sách đánh giá", "15"),
-  ]),
-  getItem("Cài đặt", "sub6", <HomeOutlined />, [
-    getItem("Quản lý banner", "17"),
-  ]),
-  getItem("Quản lý đơn hàng", "sub7", <HomeOutlined />, [
-    getItem("Team 1", "19"),
-    getItem("Team 2", "20"),
-  ]),
+  getItem("Quản lý khách hàng", "8", <UserOutlined />),
+  getItem("Quản lý đơn hàng", "9", <ProfileOutlined />),
+  getItem("Đánh giá sản phẩm", "10", <CommentOutlined />),
+  getItem("Cài đặt", "11", <SettingOutlined />),
+  getItem("Báo cáo", "12", <AreaChartOutlined />),
 ];
 const Indexadmin = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -72,18 +56,37 @@ const Indexadmin = () => {
     5: <AllProductPageForm />,
     6: <DiscountPageForm />,
     8: <PanelListCustomer />,
-    15: <PanelReviewProduct />,
-    17: <PanelManagementBanner />
+    10: <PanelReviewProduct />,
+    11: <PanelManagementBanner />
     // Thêm các item khác nếu cần
   };
 
   const renderBreadcrumb = () => {
     switch (selectedMenuItem) {
       case "1":
-        return <Breadcrumb.Item>Trang chủ</Breadcrumb.Item>;
-
+        return <Breadcrumb.Item>Trang chủ</Breadcrumb.Item>; 
       case "2":
-        return <Breadcrumb.Item>Quản lý</Breadcrumb.Item>;
+        return <Breadcrumb.Item>Quản lý loại hàng</Breadcrumb.Item>;
+      case "3":
+        return <Breadcrumb.Item>Quản lý size và màu</Breadcrumb.Item>;
+      case "4":
+        return <Breadcrumb.Item>Quản lý sản phẩm</Breadcrumb.Item>;
+      case "5":
+        return <Breadcrumb.Item>Tất cả sản phẩm</Breadcrumb.Item>;
+      case "6":
+        return <Breadcrumb.Item>Giảm giá</Breadcrumb.Item>;
+      case "7":
+        return <Breadcrumb.Item>Dịch vụ</Breadcrumb.Item>;
+      case "8":
+        return <Breadcrumb.Item>Quản lý khách hàng</Breadcrumb.Item>;
+      case "9":
+        return <Breadcrumb.Item>Quản lý đơn hàng</Breadcrumb.Item>;
+      case "10":
+        return <Breadcrumb.Item>Đánh giá sản phẩm</Breadcrumb.Item>;
+      case "11":
+        return <Breadcrumb.Item>Cài đặt</Breadcrumb.Item>;
+      case "12":
+        return <Breadcrumb.Item>Báo cáo</Breadcrumb.Item>;
 
       // Add more cases for other menu items if needed
       default:
@@ -111,9 +114,15 @@ const Indexadmin = () => {
       </Sider>
       <Layout>
         <Header style={{ padding: 0, background: colorBgContainer }}>
-          {/* <Space direction="vertical">  
-                    <Search placeholder="input search text" onSearch={onSearch} enterButton />  
-                </Space> */}
+        <div className="row"> 
+            <div className="col-11">
+              <h5>Xin chào admin</h5>
+              <h3>Chào mừng quay trở lại</h3>
+            </div>
+            <div className="col-1 thongbao">
+            <BellOutlined />
+            </div>
+          </div>
         </Header>
         <Content
           style={{
