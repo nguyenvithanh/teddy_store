@@ -2,12 +2,15 @@ import axios from "axios";
 import React, { useState, useEffect } from "react";
 import Sidebar from "../common/sidebar_user";
 import "../user/css/infor.css";
+import "../user/css/user.css";
 import Nav from "../common/nav";
 import Footer from "../common/footer";
+import Modal from "../user/Infor_modal";
 // import img from "../../assets/upload.jpg";
 const Infor = () => {
   const [infor, setInfor] = useState([]);
   const [gender, setGender] = useState("");
+  const [modalOpen, setModalOpen] = useState(false);
 
   const userProfile = JSON.parse(localStorage.getItem("userProfile"));
   useEffect(() => {
@@ -165,20 +168,25 @@ const Infor = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="row ">
-                    <label className="col-sm-3 text-end mt-3 fw-bold"></label>
-                    <div className="col-sm-9 d-flex mt-3">
-                      <button className="btn text-light dark_brown px-4 me-4">
-                        Cập nhập
-                      </button>
-                      <button className="btn text-light dark_brown px-4 ">
-                        Hủy
-                      </button>
-                    </div>
-                  </div>
                 </form>
               </React.Fragment>
             ))}
+            <div className="row ">
+              <label className="col-sm-3 text-end mt-3 fw-bold"></label>
+              <div className="col-sm-9 d-flex mt-3">
+                <div className="App">
+                  <button
+                    className="btn text-light dark_brown px-4 "
+                    onClick={() => {
+                      setModalOpen(true);
+                    }}
+                  >
+                    Chỉnh sửa
+                  </button>
+                  {modalOpen && <Modal setOpenModal={setModalOpen} />}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

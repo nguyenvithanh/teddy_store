@@ -7,7 +7,7 @@ import ThuBong from "./ThuBong.jsx";
 import GauBongHoatHinh from "./GauBongHoatHinh";
 import { Link } from "react-router-dom";
 import "./css/index-user.css";
-import Banner from "../common/Banner.jsx";
+import Banner from "../common/banner.jsx";
 
 export default function Index() {
   return (

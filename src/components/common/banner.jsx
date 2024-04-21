@@ -28,7 +28,7 @@ const Banner = () => {
   console.log(banners);
   return (
     <>
-      <div className="wrapper p-0 mx-0 mb-1">
+      <div className=" container wrapper p-0 mx-0 mb-1 mx-auto mt-4">
         <Slider {...settings} className="slide">
           {banners.length > 0 &&
             banners.map((banner) => (

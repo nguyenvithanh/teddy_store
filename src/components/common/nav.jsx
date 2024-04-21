@@ -42,7 +42,7 @@ export default function Nav() {
                     aria-expanded="false"
                   >
                     <i className="me-2 fa-regular fa-user"></i>
-                    <span>{userProfile.username}</span>
+                    <span className="">{userProfile.username}</span>
                   </Link>
                   <ul className="dropdown-menu">
                     <li>{<Logout />}</li>

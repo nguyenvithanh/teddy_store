@@ -36,7 +36,7 @@ function Modal({ setOpenModal }) {
         <div className="body">
           <div className="d-flex">
             <div className="image">
-              <img src={img_teddy} alt="" className="w-100" />
+              <img src={img_teddy} alt="" className="w-50" />
             </div>
             <div className="item_teddy ms-5">
               <div className="fw-bold brown_color">Gấu Teddy lông xoăn</div>
