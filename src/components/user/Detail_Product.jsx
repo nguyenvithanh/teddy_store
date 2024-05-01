@@ -8,7 +8,7 @@ import TopBear from "./TopBear.jsx";
 import Describepro from "../user/Describe_Pro.jsx"
 import Servicepro from "../user/Service_pro.jsx"
 import Rate from "../user/Rate.jsx"
-import { Link, useParams,useNavigate} from "react-router-dom"; 
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { UploadOutlined } from '@ant-design/icons';
 import { Button, Upload, Tabs, message } from 'antd';
 
@@ -130,9 +130,9 @@ export default function Detail_product() {
     }
   };
 
-   const handleBuyButtonClick = () => {
+  const handleBuyButtonClick = () => {
     // Thực hiện các hành động cần thiết trước khi chuyển hướng, ví dụ như lưu thông tin sản phẩm vào localStorage
-  
+
     // Chuyển hướng đến trang Checkout
     if (!selectedSize || !selectedColor) {
       message.error('Vui lòng chọn màu sắc');
@@ -161,7 +161,7 @@ export default function Detail_product() {
     const formattedDate = `${year}-${month}-${day}`;
     const selectedProductServiceIds = ServicePro.filter(service => service.id).map(service => service.id).join(',');
     const id_acc = user.id;
-    if(quantity<=0){
+    if (quantity <= 0) {
       message.error('Vui lòng chọn số lượng');
       return;
     }
@@ -181,15 +181,15 @@ export default function Detail_product() {
           account: { id: id_acc }
         };
         localStorage.setItem('itemSelected', JSON.stringify(cartData));
-        
+
       })
-      
+
       .catch(error => {
         message.error('Đã xảy ra lỗi khi thêm vào giỏ hàng.');
         console.error('Đã xảy ra lỗi khi thêm vào giỏ hàng:', error);
       });
-      
-      navigate('/teddy-store/checkout');
+
+    navigate('/teddy-store/checkout');
   };
   const handleChangee = (info) => {
     let newFileList = [...info.fileList];
@@ -244,11 +244,11 @@ export default function Detail_product() {
     const formattedDate = `${year}-${month}-${day}`;
     const selectedProductServiceIds = ServicePro.filter(service => service.id).map(service => service.id).join(',');
     const id_acc = user.id;
-    if(quantity<=0){
+    if (quantity <= 0) {
       message.error('Vui lòng chọn số lượng');
       return;
     }
-    
+
 
     axios.get(`http://localhost:7070/teddy-store/getProductDt/${id_size}/${id_color}`)
       .then(response => {
@@ -277,7 +277,7 @@ export default function Detail_product() {
             console.error('Đã xảy ra lỗi khi thêm vào giỏ hàng:', error);
           });
       })
-      
+
   };
   return (
     <>

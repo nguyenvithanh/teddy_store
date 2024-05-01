@@ -8,7 +8,8 @@ import logoHeader from "./images/XINH_logoheader.png";
 import SizeColorPageForm from "./Manage_size_and_color";
 import CategoryPageForm from "./Manage_product_categories";
 import ProductPageForm from "./Product_management";
-import AllProductPageForm from "./All_products";
+import Service from "./All_products";
+import AllProductPageForm from "./Service";
 import DiscountPageForm from "./Discount";
 import PanelListCustomer from "./PanelListCustomer";
 import PanelReviewProduct from "./PanelReviewProduct";
@@ -55,6 +56,7 @@ const Indexadmin = () => {
     4: <ProductPageForm />,
     5: <AllProductPageForm />,
     6: <DiscountPageForm />,
+    7: <Service/>,
     8: <PanelListCustomer />,
     10: <PanelReviewProduct />,
     11: <PanelManagementBanner />

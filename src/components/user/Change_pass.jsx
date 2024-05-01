@@ -1,8 +1,32 @@
-import React from "react";
+import React, { useState } from "react";
+import axios from "axios";
 import Sidebar from "../common/sidebar_user";
 import Nav from "../common/nav";
 import Footer from "../common/footer";
+import {message } from 'antd';
 const Order = () => {
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const inforAccount = JSON.parse(localStorage.getItem("accInfor"));
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    try {
+      if (inforAccount && inforAccount.length > 0) {
+        const accountId = inforAccount[0].id;
+        console.log("ID của tài khoản:", accountId);
+        const response = await axios.put(`http://localhost:7070/teddy-store/UpdatePassword/${accountId}`, {
+        oldPassword,
+        newPassword,
+      });
+      
+      };
+      message.success("Đổi mật khẩu thành công")
+    } catch (error) {
+      message.error("Đổi mật khẩu thất bại")
+    }
+  };
   return (
     <div className="container-fluid">
       <Nav></Nav>
@@ -19,7 +43,9 @@ const Order = () => {
                   Mật khẩu cũ
                 </label>
                 <div className="col-sm-9">
-                  <input type="text" className="form-input"></input>
+                  <input type="password" className="form-input"
+                  value={oldPassword}
+                  onChange={(e) => setOldPassword(e.target.value)}></input>
                 </div>
               </div>
               <div className="row my-4">
@@ -27,7 +53,9 @@ const Order = () => {
                   Mật khẩu mới
                 </label>
                 <div className="col-sm-9">
-                  <input type="text" className="form-input"></input>
+                  <input type="password" className="form-input" 
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}></input>
                 </div>
               </div>
               <div className="row ">
@@ -35,7 +63,9 @@ const Order = () => {
                   Nhập lại mật khẩu{" "}
                 </label>
                 <div className="col-sm-9">
-                  <input type="text" className="form-input"></input>
+                  <input type="password" className="form-input" 
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}></input>
                 </div>
               </div>
               <div className="row ">
@@ -43,7 +73,7 @@ const Order = () => {
                   {" "}
                 </label>
                 <div className="col-sm-9 d-flex mt-3">
-                  <button className="btn text-light fw-bold bg_brown rounded-5 px-4 me-4">
+                  <button className="btn text-light fw-bold bg_brown rounded-5 px-4 me-4" onClick= {handleSubmit}>
                     Lưu
                   </button>
                   <button className="btn text-light fw-bold bg_brown rounded-5 px-4 ">

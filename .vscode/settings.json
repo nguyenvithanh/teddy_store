@@ -1,4 +1,4 @@
 {
     "files.autoSaveWorkspaceFilesOnly": true,
-    "files.autoSave": "afterDelay"
+    "files.autoSave": "off"
 }

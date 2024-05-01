@@ -5,13 +5,14 @@ import "../user/css/infor.css";
 import "../user/css/user.css";
 import Nav from "../common/nav";
 import Footer from "../common/footer";
-import Modal from "../user/Infor_modal";
+import {message } from 'antd';
+// import Modal from "../user/Infor_modal";
 // import img from "../../assets/upload.jpg";
 const Infor = () => {
   const [infor, setInfor] = useState([]);
-  const [gender, setGender] = useState("");
-  const [modalOpen, setModalOpen] = useState(false);
-
+  const updatedInfor = [...infor];
+  // const [modalOpen, setModalOpen] = useState(false);
+  
   const userProfile = JSON.parse(localStorage.getItem("userProfile"));
   useEffect(() => {
     const fetchInfor = async () => {
@@ -21,12 +22,15 @@ const Infor = () => {
         );
         console.log(result.data);
         setInfor(result.data);
+        const accInfor = result.data;
+        localStorage.setItem("accInfor", JSON.stringify(accInfor));
       } catch (error) {
         console.error("Error fetching product detail:", error);
       }
     };
+    
     fetchInfor();
-  }, []);
+  }, [userProfile.id]);
   // Lấy ảnh và show ảnh
   const [selectedImage, setSelectedImage] = useState(null);
 
@@ -40,16 +44,121 @@ const Infor = () => {
       const reader = new FileReader();
       reader.onload = () => {
         setSelectedImage(reader.result);
+        const fileName = file.name; // Lấy tên của file
+        console.log("Avatar đã thay đổi:", fileName);
+
+        // Cập nhật tên avatar trong thông tin infor
+        setInfor(prevInfor => {
+          const updatedInfor = [...prevInfor];
+          updatedInfor.forEach(acc => {
+            acc.avatar = fileName;
+          });
+          console.log(updatedInfor);
+          return updatedInfor;
+
+        });
+
       };
       reader.readAsDataURL(file);
     }
   };
+  const handleChange = (id, value) => {
+    setInfor(prevInfor => {
+      const updatedInfor = prevInfor.map(acc => {
+        if (acc.id === id) {
+          return {
+            ...acc,
+            gender: value
+          };
+        }
+        return acc;
+      });
+      return updatedInfor;
+    });
+  };
 
-  const handleChange = (event) => {
-    const selectedMethod = event.target.value;
-    // setGender(selectedMethod);
-    setInfor.gender = selectedMethod;
-    console.log(setInfor.gender);
+  const handleNameChange = (id, value) => {
+    setInfor(prevInfor => {
+      const updatedInfor = prevInfor.map(acc => {
+        if (acc.id === id) {
+          return {
+            ...acc,
+            name: value
+          };
+        }
+        return acc;
+      });
+      return updatedInfor;
+    });
+  };
+
+  const handlephoneChange = (id, value) => {
+    setInfor(prevInfor => {
+      const updatedInfor = prevInfor.map(acc => {
+        if (acc.id === id) {
+          return {
+            ...acc,
+            phone: value
+          };
+        }
+        return acc;
+      });
+      return updatedInfor;
+    });
+  };
+  const handleEmailChange = (id, value) => {
+    setInfor(prevInfor => {
+      const updatedInfor = prevInfor.map(acc => {
+        if (acc.id === id) {
+          return {
+            ...acc,
+            email: value
+          };
+        }
+        return acc;
+      });
+      return updatedInfor;
+    });
+  };
+  const handlebirthdayChange = (id, value) => {
+    setInfor(prevInfor => {
+      const updatedInfor = prevInfor.map(acc => {
+        if (acc.id === id) {
+          return {
+            ...acc,
+            birthday: value
+          };
+        }
+        return acc;
+      });
+      return updatedInfor;
+    });
+  };
+  
+  const handleUpdate = async () => {
+    const avt = updatedInfor.map(avt => avt.avatar).join(',');
+    const name = updatedInfor.map(avt => avt.name).join(',');
+    const gender = updatedInfor.map(avt => avt.gender).join(',');
+    const birthday = updatedInfor.map(avt => avt.birthday).join(',');
+    const email = updatedInfor.map(avt => avt.email).join(',');
+    const phone = updatedInfor.map(avt => avt.phone).join(',');
+    console.log("inforUpdate", avt,name,gender,phone,email,birthday);
+    try {
+      await axios.put(`http://localhost:7070/teddy-store/updateInfor/${userProfile.id}`, { 
+         
+          avatar: avt,
+          name : name,
+          gender:gender,
+          birthday: birthday,
+          email: email,
+          phone: phone
+         
+      });
+      message.success('Thông tin đã được cập nhật thành công');
+      console.log("Thông tin đã được cập nhật thành công!");
+    } catch (error) {
+      console.error("Error updating user info:", error);
+    }
   };
 
   return (
@@ -97,7 +206,8 @@ const Infor = () => {
                       <input
                         type="text"
                         className="form-input"
-                        defaultValue={acc.name}
+                        value={acc.name}
+                        onChange={(e) => handleNameChange(acc.id, e.target.value)}
                       ></input>
                     </div>
                   </div>
@@ -109,7 +219,8 @@ const Infor = () => {
                       <input
                         type="text"
                         className="form-input"
-                        defaultValue={acc.phone}
+                        value={acc.phone}
+                        onChange={(e) => handlephoneChange(acc.id, e.target.value)}
                       ></input>
                     </div>
                   </div>
@@ -121,7 +232,8 @@ const Infor = () => {
                       <input
                         type="text"
                         className="form-input"
-                        defaultValue={acc.email}
+                        value={acc.email}
+                        onChange={(e) => handleEmailChange(acc.id, e.target.value)}
                       ></input>
                     </div>
                   </div>
@@ -133,7 +245,8 @@ const Infor = () => {
                       <input
                         type="text"
                         className="form-input"
-                        defaultValue={acc.birthday}
+                        value={acc.birthday}
+                        onChange={(e) => handlebirthdayChange(acc.id, e.target.value)}
                       ></input>
                     </div>
                   </div>
@@ -148,7 +261,7 @@ const Infor = () => {
                             value="true"
                             checked={acc.gender === true}
                             name="gender"
-                            onClick={handleChange}
+                            onClick={() => handleChange(acc.id, true)}
                           />
                           Nam
                           <span className="checkmark" />
@@ -161,10 +274,11 @@ const Infor = () => {
                             name="gender"
                             value="false"
                             checked={acc.gender === false}
-                            onClick={handleChange}
+                            onClick={() => handleChange(acc.id, false)}
                           />
                           <span className="checkmark" />
                         </label>
+
                       </div>
                     </div>
                   </div>
@@ -177,13 +291,10 @@ const Infor = () => {
                 <div className="App">
                   <button
                     className="btn text-light dark_brown px-4 "
-                    onClick={() => {
-                      setModalOpen(true);
-                    }}
+                    onClick= {handleUpdate}
                   >
                     Chỉnh sửa
-                  </button>
-                  {modalOpen && <Modal setOpenModal={setModalOpen} />}
+                  </button> 
                 </div>
               </div>
             </div>

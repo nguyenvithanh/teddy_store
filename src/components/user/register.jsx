@@ -3,20 +3,13 @@ import Navigation from "../common/nav.jsx";
 import "./css/register.css"
 import userAPI from "../api/userAPI";
 import { useNavigate } from "react-router-dom";
-import Modal from "react-bootstrap/Modal";
-import Button from 'react-bootstrap/Button';
-import forgotPasswordImg from './images/forget-password-img.jpg'
+
 
 export default function Register() {
     const navigate = useNavigate();
-
-    const [show, setShow] = useState(false);
     const [emailForgotPassword, setEmailForgotPassword] = useState(''); // email to reset password
     const [messageEmailInvalid, setMessageEmailInvalid] = useState('Email không hợp lệ');
     const [messageUsernameInvalid, setMessageUsernameInvalid] = useState('Vui lòng nhập nhập tên đăng nhập.');
-
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
 
     const [name, setName] = useState('');
     const [phone, setPhone] = useState('');
@@ -70,7 +63,7 @@ export default function Register() {
         confirmPassword
     ]);
     // { Click vào input mới bắt đầu bắt lỗi
-    const [nameTouched, setNameTouched] = useState(false);
+const [nameTouched, setNameTouched] = useState(false);
     const [phoneTouched, setPhoneTouched] = useState(false);
     const [dobTouched, setDobTouched] = useState(false);
     const [emailTouched, setEmailTouched] = useState(false);
@@ -89,7 +82,6 @@ export default function Register() {
         setUsernameTouched(true);
         setPasswordTouched(true);
         setConfirmPasswordTouched(true);
-
     }
     // }
     const handleSubmit = (e) => {
@@ -126,34 +118,15 @@ export default function Register() {
                     setMessageUsernameInvalid('Tên đăng nhập đã tồn tại');
                     setIsUsernameValid(false);
                 }
-                else {
-                    // chỗ này khi nào có login thì xóa cái alert rồi href bên dưới thành login
+                else { 
                     alert('Đăng ký thành công.');
                     window.location.href = '/';
                 }
             })
-            // .catch(error => {
-            //     alert('Đăng ký fail.');
-            // });
         }
     };
 
-    const resetPassword = (e) => {
-        e.preventDefault();
-        const data = {
-            email: emailForgotPassword
-        }
-        userAPI.resetPassword(data).then(r => {
-            if(r.toString() === 'NOT_FOUND_EMAIL') {
-                alert('Email không tồn tại');
-            } else {
-                alert('Vui lòng kiểm tra email để xem mật khẩu');
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1000);
-            }
-        });
-    }
+
 
     const validateEmail = (email) => {
         return email.match(
@@ -180,23 +153,16 @@ export default function Register() {
         if (age < 12) {
             return true;
         }
-
         return false;
     };
  
     return (<>
-        <div className="container-fluid p-0 m-0">
+<div className="container-fluid p-0 m-0">
             <div className="container-fluid">{<Navigation />}</div>
 
         </div>
-        <div>
-            <meta charSet="UTF-8" />
-            <meta name="viewport" content="width=
-    , initial-scale=1.0"/>
-            <title>Document</title>
-            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-                integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
-                crossOrigin="anonymous" />
+        <div>      
+            
             <div className="container py-3 my-5 w-50 border rounded p-0">
                 <h2 className="text-center">Đăng ký</h2>
                 <div className="container px-5">
@@ -245,7 +211,7 @@ export default function Register() {
                                 )}
                                 {(isUnderAge(dob) && dobTouched) && (
                                     <div className="invalid">
-                                        Bạn phải đủ 12 tuổi để đăng ký.
+Bạn phải đủ 12 tuổi để đăng ký.
                                     </div>
                                 )}
                             </div>
@@ -294,7 +260,7 @@ export default function Register() {
                                     {messageUsernameInvalid}
                                 </div>
                             )}
-                            {nameTouched && isUsernameSpecialChar && (
+{nameTouched && isUsernameSpecialChar && (
                                 <div className="invalid mb-0">
                                     Tên đăng nhập không được chứa kí tự đặc biệt
                                 </div>
@@ -340,18 +306,13 @@ export default function Register() {
                             >Đăng ký
                             </button>
                             <p>Bạn đã có tài khoản? <a href="#" style={{ color: '#644c38' }}>Đăng nhập</a></p>
-                            <p>Bạn quên mật khẩu?
-                                <a href="##" style={{ color: '#644c38' }}
-                                    onClick={handleShow}
-                                >Quên mật khẩu</a>
-                            </p>
                         </div>
                     </form>
                 </div>
                 {/* end form */}
                 <div className="text-center mb-4">
                     <hr className="my-4 mx-3" style={{
-                        border: 'none',
+border: 'none',
                         borderTop: '1px solid #000',
                         width: '30%',
                         display: 'inline-block',
@@ -385,39 +346,6 @@ export default function Register() {
                 </div>
             </div>
         </div>
-
-
-        <Modal
-            show={show}
-            onHide={handleClose}
-            size={"lg"}
-            centered={true}
-        >
-            <Modal.Header closeButton>
-            </Modal.Header>
-            <Modal.Body>
-                <div className={"center"}>
-                    <img src={forgotPasswordImg} alt="forget-password" className={"img"} />
-                    <h5>Quên mật khẩu</h5>
-                    <span>Vui lòng cung cấp email đăng nhập, chúng tôi sẽ gửi mật khẩu reset về email của bạn.</span>
-                </div>
-                <form className={"form-forgot"}>
-                    <div className="mb-3">
-                        <label className="form-label">Email</label>
-                        <input type="email" className="form-control" required={true}
-                            onChange={(e) => setEmailForgotPassword(e.target.value)}
-                        />
-                    </div>
-                    <div className="mb-3 d-flex flex-column align-items-center">
-                        <Button style={{ backgroundColor: '#644c38', borderRadius: 10 }} type="submit"
-                            className="btn btn-primary px-5 mb-3"
-                            onClick={resetPassword}
-                        >Cấp lại mật khẩu
-                        </Button>
-                    </div>
-                </form>
-            </Modal.Body>
-        </Modal>
     </>
     );
 }

@@ -6,6 +6,7 @@ import Cart from "./components/user/Cart.jsx";
 import Register from "./components/user/register.jsx";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Login from "./components/Login.jsx";
+import Logout from "./components/Logout.jsx";
 import Checkout from "./components/user/Checkout.jsx";
 import Infor from "./components/user/Infor.jsx";
 import Order from "./components/user/Order_status.jsx";
@@ -24,6 +25,7 @@ function App() {
           element={<DetailProduct />}
         ></Route>
         <Route path="/teddy-store/login" element={<Login />}></Route>
+        <Route path="/teddy-store/Logout" element={<Logout />}></Route>
         <Route path="/teddy-store/infor" element={<Infor />}></Route>
         <Route path="/teddy-store/cart" element={<Cart />}></Route>
         <Route path="/teddy-store/register" element={<Register />}></Route>

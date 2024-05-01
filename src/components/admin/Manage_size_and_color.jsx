@@ -1,112 +1,103 @@
-import React, {useEffect, useState} from 'react';
-import {Form, Input, Select, Button, Table, Space, Tabs, notification, Pagination} from 'antd';
-import {EditOutlined} from '@ant-design/icons';
+import React, { useEffect, useState } from 'react';
+import { Form, Input, Select, Button, Table, Space, Tabs, notification, Pagination } from 'antd';
+import { EditOutlined} from '@ant-design/icons';
 import sizeAPI from "../api/sizeAPI";
 import colorAPI from "../api/colorAPI";
-const {TabPane} = Tabs; 
+
+const { TabPane } = Tabs;
 
 
 const SizeColorPageForm = () => {
 
-    const DURATION = 1; // Thời gian hiển thị thông báo
-
-    // xử lý trang size
+    const DURATION = 1; 
     const [pageSize, setPageSize] = useState(0);
-    const [sizeSize, setSizeSize] = useState(5);
+    const [sizeSize, setSizeSize] = useState(10);
     const [listSize, setListSize] = useState([]);
-    const [isAddModeSize, setIsAddModeSize] = useState(true); // True: là thêm mới, False: là cập nhật
+    const [isAddModeSize, setIsAddModeSize] = useState(true); 
     const [formSize] = Form.useForm();
     const [idSize, setIdSize] = useState('-1');
     const [sizeNo, setsizeNo] = useState('');
-    const [totalSize, setTotalSize] = useState(0);   // tổng số dòng dữ liệu
-    const [searchSize, setSearchSize] = useState('');   // Từ khóa tìm kiếm
+    const [totalSize, setTotalSize] = useState(0);   
+    const [searchSize, setSearchSize] = useState('');   
 
-    const onShowSizeChangeSize = (current, pageSize) => {
-        setPageSize(current - 1);
-        setSizeSize(pageSize);
-    };
     const onPageChangeSize = (page, pageSize) => {
         setPageSize(page - 1);
     };
 
     const handlePageChangeSize = (newPage) => {
-        // Nếu newPage < 0 hoặc newPage > tổng số trang thì không làm gì cả
+        
         if (newPage < 0) {
             notification.warning({
-                description: 'Bạn đang ở trang đầu tiên!', duration: DURATION, // Duration the notification stays open, in seconds
+                description: 'Bạn đang ở trang đầu tiên!', duration: DURATION, 
             });
             return;
         }
         if (newPage > totalSize / sizeSize) {
             notification.warning({
-                description: 'Bạn đang ở trang cuối cùng!', duration: DURATION, // Duration the notification stays open, in seconds
+                description: 'Bạn đang ở trang cuối cùng!', duration: DURATION, 
             });
             return;
         }
-
-        // Gọi API lấy danh sách sản phẩm
         setPageSize(newPage);
     }
 
-    // check hàm khi bấm nút lưu
     const onFinishSize = (value) => {
         value.preventDefault();
-        // Add your form submission logic here
         if (sizeNo === '') {
             notification.error({
-                description: 'Vui lòng số size!', duration: DURATION, // Duration the notification stays open, in seconds
+                description: 'Vui lòng số size!', duration: DURATION, 
             });
             return;
         }
 
-        // call API để lưu dữ liệu
-        sizeAPI.updateSize({idSize, sizeNo}).then(r => {
-            // nếu respanse trả về là OK thì thông báo thành công
+        sizeAPI.updateSize({ idSize, sizeNo }).then(r => {
             if (r === "OK") {
                 notification.success({
                     message: 'Success',
                     description: isAddModeSize ? 'Thêm size gấu thành công!' : 'Chỉnh sửa size gấu thành công!',
-                    duration: DURATION, // Duration the notification stays open, in seconds
+                    duration: DURATION, 
                 });
                 handleResetSize();
             } else {
                 notification.error({
-                    message: 'Error', description: 'Thêm size gấu thất bại!', duration: DURATION, // Duration the notification stays open, in seconds
+                    message: 'Error',
+                    description: r === 'SIZE_EXISTED' ? 'Size gấu đã tồn tại' : 'Thêm size gấu thất bại!',
+                    duration: DURATION, 
                 });
             }
         });
     }
 
-    // hàm xử lý khi bấm nút tìm kiếm
+    
     const handleSearchSize = () => {
-        // Nếu không nhập gì thì thông báo lỗi
+      
         if (searchSize === '') {
             notification.error({
-                description: 'Vui lòng nhập size gấu để tìm kiếm!', duration: DURATION, // Duration the notification stays open, in seconds
+                description: 'Vui lòng nhập size gấu để tìm kiếm!', duration: DURATION, 
             });
             return;
         }
-        // Tìm kiếm theo tên danh mục
-        sizeAPI.searchSize({sizeNo: searchSize, pageSize, sizeSize}).then(r => {
+
+        sizeAPI.searchSize({ sizeNo: searchSize, pageSize, sizeSize }).then(r => {
             setListSize(r?.content || []);
             setTotalSize(r?.totalElements || 0);
         });
     }
 
-    // hàm xử lý khi bấm nút sửa (icon bút chì)
+
     const handleFillDataSize = (record) => {
         setIdSize(record.id);
         setsizeNo(record.size_no);
         setIsAddModeSize(false);
     }
 
-    // hàm xử lý khi chọn số lượng hiển thị trên 1 trang
+
     const handleSizeChangeSize = (value) => {
         setSizeSize(value);
         setPageSize(0);
     }
 
-    // hàm xử lý để lấy danh sách sản phẩm
+  
     const fetchListSize = async () => {
         try {
             const response = await sizeAPI.getAll(pageSize, sizeSize);
@@ -117,7 +108,7 @@ const SizeColorPageForm = () => {
         }
     }
 
-    // hàm xử lý khi bấm nút làm mới
+ 
     const handleResetSize = () => {
         formSize.resetFields();
         setsizeNo('');
@@ -126,7 +117,7 @@ const SizeColorPageForm = () => {
         setSearchSize('');
 
         setPageSize(0);
-        setSizeSize(5);
+        setSizeSize(10);
         fetchListSize().then(r => r);
     }
     useEffect(() => {
@@ -134,102 +125,95 @@ const SizeColorPageForm = () => {
     }, [pageSize, sizeSize]);
 
 
-    // xử lý trang màu gấu
+
     const [pageColor, setPageColor] = useState(0);
     const [sizeColor, setSizeColor] = useState(10);
     const [listColor, setListColor] = useState([]);
-    const [isAddModeColor, setIsAddModeColor] = useState(true); // True: là thêm mới, False: là cập nhật
+    const [isAddModeColor, setIsAddModeColor] = useState(true);
     const [formColor] = Form.useForm();
     const [idColor, setIdColor] = useState('-1');
     const [color, setColor] = useState('');
-    const [totalColor, setTotalColor] = useState(0);   // tổng số dòng dữ liệu
-    const [searchColor, setSearchColor] = useState('');   // Từ khóa tìm kiếm
+    const [totalColor, setTotalColor] = useState(0);   
+    const [searchColor, setSearchColor] = useState('');   
 
-    const onShowSizeChangeColor = (current, pageSize) => {
-        setPageColor(current - 1);
-        setSizeColor(pageSize);
-    };
+
     const onPageChangeColor = (page, pageSize) => {
         setPageColor(page - 1);
     };
     const handlePageChangeColor = (newPage) => {
-        // Nếu newPage < 0 hoặc newPage > tổng số trang thì không làm gì cả
         if (newPage < 0) {
             notification.warning({
-                description: 'Bạn đang ở trang đầu tiên!', duration: DURATION, // Duration the notification stays open, in seconds
+                description: 'Bạn đang ở trang đầu tiên!', duration: DURATION, 
             });
             return;
         }
         if (newPage > totalColor / sizeColor) {
             notification.warning({
-                description: 'Bạn đang ở trang cuối cùng!', duration: DURATION, // Duration the notification stays open, in seconds
+                description: 'Bạn đang ở trang cuối cùng!', duration: DURATION, 
             });
             return;
         }
-
-        // Gọi API lấy danh sách sản phẩm
         setPageColor(newPage);
     }
 
-    // check hàm khi bấm nút lưu
+
     const onFinishColor = (value) => {
         value.preventDefault();
-        // Add your form submission logic here
         if (color === '') {
             notification.error({
-                description: 'Vui lòng nhập màu gấu!', duration: DURATION, // Duration the notification stays open, in seconds
+                description: 'Vui lòng nhập màu gấu!', duration: DURATION, 
             });
             return;
         }
 
-        // call API để lưu dữ liệu
-        colorAPI.updateColor({idColor, color}).then(r => {
-            // nếu respanse trả về là OK thì thông báo thành công
+        
+        colorAPI.updateColor({ idColor, color }).then(r => {
             if (r === "OK") {
                 notification.success({
                     message: 'Success',
                     description: isAddModeColor ? 'Thêm màu gấu thành công!' : 'Chỉnh sửa màu gấu thành công!',
-                    duration: DURATION, // Duration the notification stays open, in seconds
+                    duration: DURATION, 
                 });
                 handleResetColor();
             } else {
                 notification.error({
-                    message: 'Error', description: 'Thêm màu gấu thất bại!', duration: DURATION, // Duration the notification stays open, in seconds
+                    message: 'Error',
+                    description: r === 'COLOR_EXISTED' ? 'Màu gấu đã tồn tại' : 'Thêm màu gấu thất bại!',
+                    duration: DURATION, 
                 });
             }
         });
     }
 
-    // hàm xử lý khi bấm nút tìm kiếm
+
     const handleSearchColor = () => {
-        // Nếu không nhập gì thì thông báo lỗi
         if (searchColor === '') {
             notification.error({
-                description: 'Vui lòng nhập màu gấu để tìm kiếm!', duration: DURATION, // Duration the notification stays open, in seconds
+                description: 'Vui lòng nhập màu gấu để tìm kiếm!', duration: DURATION, 
             });
             return;
         }
-        // Tìm kiếm theo tên danh mục
-        colorAPI.searchColor({color: searchColor, pageColor, sizeColor}).then(r => {
+        
+        colorAPI.searchColor({ color: searchColor, pageColor, sizeColor }).then(r => {
             setListColor(r?.content || []);
             setTotalColor(r?.totalElements || 0);
         });
     }
 
-    // hàm xử lý khi bấm nút sửa (icon bút chì)
+    
     const handleFillDataColor = (record) => {
         setIdColor(record.id);
         setColor(record.color);
         setIsAddModeColor(false);
     }
 
-    // hàm xử lý khi chọn số lượng hiển thị trên 1 trang
+   
     const handleSizeChangeColor = (value) => {
         setSizeColor(value);
         setPageColor(0);
     }
 
-    // hàm xử lý để lấy danh sách màu gấu
+    
     const fetchListColor = async () => {
         try {
             const response = await colorAPI.getAll(pageColor, sizeColor);
@@ -240,16 +224,15 @@ const SizeColorPageForm = () => {
         }
     }
 
-    // hàm xử lý khi bấm nút làm mới
+   
     const handleResetColor = () => {
         formColor.resetFields();
         setColor('');
         setIsAddModeColor(true);
         setIdColor('-1');
         setSearchColor('');
-
         setPageColor(0);
-        setSizeColor(5);
+        setSizeColor(10);
         fetchListColor().then(r => r);
     }
     useEffect(() => {
@@ -265,30 +248,30 @@ const SizeColorPageForm = () => {
                         <div className="container">
                             <div className="d-flex justify-content-between mt-4">
                                 <div>
-                                        <span className="text-color">Hiển thị
-                                            <Select className="input-option" id="colorSelect"
-                                                    value={sizeSize}
-                                                    style={{width: '80px'}}
-                                                    onChange={handleSizeChangeSize}
-                                            >
-                                                <Select.Option value={10}>10</Select.Option>
-                                                <Select.Option value={9}>9</Select.Option>
-                                                <Select.Option value={8}>8</Select.Option>
-                                                <Select.Option value={7}>7</Select.Option>
-                                            </Select>
-                                            mục</span>
+                                    <span className="text-color">Hiển thị
+                                        <Select className="input-option" id="colorSelect"
+                                            value={sizeSize}
+                                            style={{ width: '80px' }}
+                                            onChange={handleSizeChangeSize}
+                                        >
+                                            <Select.Option value={10}>10</Select.Option>
+                                            <Select.Option value={9}>9</Select.Option>
+                                            <Select.Option value={8}>8</Select.Option>
+                                            <Select.Option value={7}>7</Select.Option>
+                                        </Select>
+                                        mục</span>
                                 </div>
                                 <div className="d-flex">
                                     <div className="me-2">
                                         <Input type="text" placeholder="Tìm kiếm màu"
-                                               value={searchSize}
-                                               onChange={(e) => setSearchSize(e.target.value)}
+                                            value={searchSize}
+                                            onChange={(e) => setSearchSize(e.target.value)}
                                         />
                                     </div>
                                     <div>
                                         <Button type="primary" className="text-white rounded-3"
-                                                onClick={handleSearchSize}
-                                                style={{backgroundColor: '#644c38'}}>
+                                            onClick={handleSearchSize}
+                                            style={{ backgroundColor: '#644c38' }}>
                                             <i className="fa-solid fa-magnifying-glass"></i>
                                         </Button>
                                     </div>
@@ -297,56 +280,49 @@ const SizeColorPageForm = () => {
                             <div className="d-flex justify-content-between mt-0 ">
                                 <Form className="d-flex flex-wrap align-items-center mt-4">
                                     <Form.Item className="mb-3 me-5"
-                                               rules={[{required: true, message: 'Vui lòng nhập size gấu!'}]}>
+                                        rules={[{ required: true, message: 'Vui lòng nhập size gấu!' }]}>
                                         <label className="form-label form-label-sm text-color">Size gấu</label>
                                         <Input className="form-control form-control-sm input"
-                                               value={sizeNo}
-                                               onChange={(e) => setsizeNo(e.target.value)}
+                                            value={sizeNo}
+                                            onChange={(e) => setsizeNo(e.target.value)}
                                         />
                                     </Form.Item>
-                                    
+
                                     <Form.Item className="mb-3 mt-4">
                                         <Button type="primary" className="me-2 button-action"
-                                                onClick={onFinishSize}
+                                            onClick={onFinishSize}
                                         >Lưu</Button>
                                         <Button className="button-action"
-                                                onClick={handleResetSize}>Làm mới</Button>
+                                            onClick={handleResetSize}>Làm mới</Button>
                                     </Form.Item>
                                 </Form>
                             </div>
                         </div>
                         {/* table */}
                         <Table className="table text-center align-middle" dataSource={listSize} pagination={false}>
-                            <Table.Column title="ID" dataIndex="id" key="id"/>
-                            <Table.Column title="Size" dataIndex="size_no" key="size_no"/>
+                            <Table.Column title="ID" dataIndex="id" key="id" />
+                            <Table.Column title="Size" dataIndex="size_no" key="size_no" />
                             <Table.Column
                                 title="Chỉnh sửa"
                                 key="action"
                                 render={(text, record) => (<Space size="middle">
-                                    <a href="#" className="me-2" style={{color: '#644c38'}}
-                                       onClick={() => handleFillDataSize(record)}>
-                                        <EditOutlined style={{width: '10px', height: '10px'}}/>
+                                    <a href="#" className="me-2" style={{ color: '#644c38' }}
+                                        onClick={() => handleFillDataSize(record)}>
+                                        <EditOutlined style={{ width: '10px', height: '10px' }} />
                                     </a>
                                 </Space>)}
                             />
                         </Table>
-                        
-                        <Pagination
-                            // showSizeChanger
-                            onShowSizeChange={onShowSizeChangeSize}
-                            onChange={onPageChangeSize}
-                            // showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} items`}
-                            defaultCurrent={pageSize}
+
+                        <div className='col-12'>
+                        <Pagination                          
+                            pageSize={sizeSize}
                             total={totalSize}
+                            prevIcon={<span onClick={() => handlePageChangeSize(pageSize - 1)}>Trước</span>}
+                            nextIcon={<span onClick={() => handlePageChangeSize(pageSize + 1)}>Sau</span>}
+                            onChange={onPageChangeSize}
                         />
-                        <div className="d-flex justify-content-end">
-                            <div className="btn-group border" role="group" aria-label="Basic example">
-                                <Button type="default" className="border"
-                                        onClick={() => handlePageChangeSize(pageSize - 1)}>Trước</Button>
-                                <Button type="default" className="border"
-                                        onClick={() => handlePageChangeSize(pageSize + 1)}>Sau</Button>
-                            </div>
-                        </div>
+                        </div>                      
                     </TabPane>
                     <TabPane tab="Màu gấu" key="2">
                         {/* tab2 */}
@@ -357,27 +333,27 @@ const SizeColorPageForm = () => {
                                         <Select
                                             className="input-option"
                                             value={sizeColor}
-                                            style={{width: '80px'}}
+                                            style={{ width: '80px' }}
                                             onChange={handleSizeChangeColor}
                                         >
-                                    <Select.Option value={10}>10</Select.Option>
-                                    <Select.Option value={9}>9</Select.Option>
-                                    <Select.Option value={8}>8</Select.Option>
-                                    <Select.Option value={7}>7</Select.Option>
-                                </Select>
+                                            <Select.Option value={10}>10</Select.Option>
+                                            <Select.Option value={9}>9</Select.Option>
+                                            <Select.Option value={8}>8</Select.Option>
+                                            <Select.Option value={7}>7</Select.Option>
+                                        </Select>
                                         mục</span>
                                 </div>
                                 <div className="d-flex">
                                     <div className="me-2">
                                         <Input type="text" placeholder="Tìm kiếm màu"
-                                               value={searchColor}
-                                               onChange={(e) => setSearchColor(e.target.value)}
+                                            value={searchColor}
+                                            onChange={(e) => setSearchColor(e.target.value)}
                                         />
                                     </div>
                                     <div>
                                         <Button type="primary" className="text-white rounded-3"
-                                                onClick={handleSearchColor}
-                                                style={{backgroundColor: '#644c38'}}>
+                                            onClick={handleSearchColor}
+                                            style={{ backgroundColor: '#644c38' }}>
                                             <i className="fa-solid fa-magnifying-glass"></i>
                                         </Button>
                                     </div>
@@ -386,54 +362,46 @@ const SizeColorPageForm = () => {
 
                             <Form className="d-flex flex-wrap align-items-center mt-4">
                                 <Form.Item className="mb-3 me-5"
-                                           rules={[{required: true, message: 'Vui lòng màu gấu!'}]}>
+                                    rules={[{ required: true, message: 'Vui lòng màu gấu!' }]}>
                                     <label className="form-label form-label-sm text-color">Màu</label>
                                     <Input className="form-control form-control-sm input"
-                                           value={color}
-                                           onChange={(e) => setColor(e.target.value)}/>
+                                        value={color}
+                                        onChange={(e) => setColor(e.target.value)} />
                                 </Form.Item>
-                                
+
                                 <Form.Item className="mb-3 mt-4">
                                     <Button type="primary" className="me-2 button-action"
-                                            onClick={onFinishColor}>Lưu</Button>
+                                        onClick={onFinishColor}>Lưu</Button>
                                     <Button className="button-action"
-                                            onClick={handleResetColor}>Làm mới</Button>
+                                        onClick={handleResetColor}>Làm mới</Button>
                                 </Form.Item>
                             </Form>
                         </div>
                         {/* table */}
                         <Table className="table text-center align-middle" dataSource={listColor}
-                               pagination={false}>
-                            <Table.Column title="ID" dataIndex="id" key="id"/>
-                            <Table.Column title="Màu" dataIndex="color" key="color"/>
-                            
+                            pagination={false}>
+                            <Table.Column title="ID" dataIndex="id" key="id" />
+                            <Table.Column title="Màu" dataIndex="color" key="color" />
+
                             <Table.Column
                                 title="Chỉnh sửa"
                                 key="action"
                                 render={(text, record) => (<Space size="middle">
-                                    <a href="#" className="me-2" style={{color: '#644c38'}}
-                                       onClick={() => handleFillDataColor(record)}>
-                                        <EditOutlined style={{width: '10px', height: '10px'}}/>
+                                    <a href="#" className="me-2" style={{ color: '#644c38' }}
+                                        onClick={() => handleFillDataColor(record)}>
+                                        <EditOutlined style={{ width: '10px', height: '10px' }} />
                                     </a>
                                 </Space>)}
                             />
                         </Table>
+
                         <Pagination
-                            // showSizeChanger
-                            onShowSizeChange={onShowSizeChangeColor}
-                            onChange={onPageChangeColor}
-                            // showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} items`}
-                            defaultCurrent={pageColor}
+                            pageSize={sizeColor}
                             total={totalColor}
-                        />
-                          <div className="d-flex justify-content-end">
-                            <div className="btn-group border" role="group" aria-label="Basic example">
-                                <Button type="default" className="border"
-                                        onClick={() => handlePageChangeSize(pageColor - 1)}>Trước</Button>
-                                <Button type="default" className="border"
-                                        onClick={() => handlePageChangeSize(pageColor + 1)}>Sau</Button>
-                            </div>
-                        </div>
+                            prevIcon={<span onClick={() => handlePageChangeColor(pageColor - 1)}>Trước</span>}
+                            nextIcon={<span onClick={() => handlePageChangeColor(pageColor + 1)}>Sau</span>}
+                            onChange={onPageChangeColor}
+                        />                      
                     </TabPane>
                 </Tabs>
             </div>
@@ -443,4 +411,4 @@ const SizeColorPageForm = () => {
 };
 
 
-export default SizeColorPageForm;
+export default SizeColorPageForm; 

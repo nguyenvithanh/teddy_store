@@ -13,27 +13,22 @@
     background-color: var(--base);
 }
 
-.modalBackground {
-    width: 100vw;
-    height: 100vh;
+.modalBackground { 
     background-color: rgba(0, 0, 0, 0.35);
     position: fixed;
     display: flex;
     justify-content: center;
-    align-items: center;
-    margin-right: 420px;
-    margin-top: -1668px;
+    align-items: center; 
 
 }
 
 .modalContainer {
-    width: 650px;
+    width: 750px;
     border-radius: 5px;
     background-color: white;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     display: flex;
-    flex-direction: column;
-    padding: 50px;
+    flex-direction: column; 
 }
 
 
@@ -53,7 +48,7 @@
 
 
 
-.modalContainer .footer_model {
+.modalContainer .footer_model {  
     flex: 20%;
     display: flex;
     justify-content: center;
@@ -61,10 +56,9 @@
 
 }
 
-.modalContainer .footer_model button {
+.modalContainer .footer_model button { 
     width: 150px;
-    height: 45px;
-    margin: 10px;
+    height: 45px; 
     border: none;
     font-weight: bold;
     background-color: #644C38;

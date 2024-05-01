@@ -1,100 +1,89 @@
-import React, {useEffect, useState} from 'react';
-import {Form, Input, Select, Button, Table, Space, Badge, notification, Pagination} from 'antd';
-import {EditOutlined} from '@ant-design/icons';
+import React, { useEffect, useState } from 'react';
+import { Form, Input, Select, Button, Table, Space, Badge, notification, Pagination } from 'antd';
+import { EditOutlined } from '@ant-design/icons';
 import categoryAPI from "../api/categoryAPI";
-import CategoryAPI from "../api/categoryAPI";
+
 
 const CategoryPageForm = () => {
-    const DURATION = 1; // Thời gian hiển thị thông báo
+    const DURATION = 1; 
     const [page, setPage] = useState(0);
-    const [size, setSize] = useState(5);
+    const [size, setSize] = useState(10);
     const [list, setList] = useState([]);
-    const [isAddMode, setIsAddMode] = useState(true); // True: là thêm mới, False: là cập nhật
+    const [isAddMode, setIsAddMode] = useState(true); 
     const [form] = Form.useForm();
     const [id, setId] = useState('-1');
     const [name, setName] = useState('');
     const [active, setActive] = useState("true");
-    const [total, setTotal] = useState(0);   // tổng số dòng dữ liệu
-    const [search, setSearch] = useState('');   // Từ khóa tìm kiếm
+    const [total, setTotal] = useState(0);   
+    const [search, setSearch] = useState('');   
 
-    const onShowSizeChange = (current, pageSize) => {
-        setPage(current - 1);
-        setSize(pageSize);
-    };
-    const onPageChange = (page, pageSize) => {
+
+    const onPageChange = (page) => { 
         setPage(page - 1);
     };
     const handlePageChange = (newPage) => {
         console.log('ok', total);
-        // Nếu newPage < 0 hoặc newPage > tổng số trang thì không làm gì cả
         if (newPage < 0) {
             notification.warning({
-                description: 'Bạn đang ở trang đầu tiên!', duration: DURATION, // Duration the notification stays open, in seconds
+                description: 'Bạn đang ở trang đầu tiên!', duration: DURATION, 
             });
             return;
         }
         if (newPage > total / size) {
             notification.warning({
-                description: 'Bạn đang ở trang cuối cùng!', duration: DURATION, // Duration the notification stays open, in seconds
+                description: 'Bạn đang ở trang cuối cùng!', duration: DURATION, 
             });
             return;
         }
-
-        // Gọi API lấy danh sách sản phẩm
         setPage(newPage);
     }
-
-    // check hàm khi bấm nút lưu
     const onFinish = (value) => {
-        value.preventDefault();
-        // Add your form submission logic here
+        value.preventDefault(); 
         if (name === '') {
             notification.error({
                 description: 'Vui lòng nhập tên danh mục!',
-                duration: DURATION, // Duration the notification stays open, in seconds
+                duration: DURATION, 
             });
             return;
         }
 
-        // call API để lưu dữ liệu
-        CategoryAPI.updateCategory({id, name, active}).then(r => {
-            // nếu respanse trả về là OK thì thông báo thành công
+      
+        categoryAPI.updateCategory({ id, name, active }).then(r => {         
             if (r === "OK") {
                 notification.success({
                     message: 'Success',
                     description: isAddMode ? 'Thêm danh mục thành công!' : 'Chỉnh sửa danh mục thành công!',
-                    duration: DURATION, // Duration the notification stays open, in seconds
+                    duration: DURATION, 
                 });
                 handleReset();
             } else {
                 notification.error({
                     message: 'Error',
-                    description: 'Thêm danh mục thất bại!',
-                    duration: DURATION, // Duration the notification stays open, in seconds
+                    description: r === 'CATEGORY_EXISTED' ? 'Danh mục đã tồn tại' : 'Thêm danh mục thất bại!',
+                    duration: DURATION, 
                 });
             }
         });
     }
 
-    // hàm xử lý khi bấm nút tìm kiếm
+
     const handleSearch = () => {
-        // Nếu không nhập gì thì thông báo lỗi
         if (search === '') {
             notification.error({
                 description: 'Vui lòng nhập tên danh mục để tìm kiếm!',
-                duration: DURATION, // Duration the notification stays open, in seconds
+                duration: DURATION, 
             });
             return;
         }
         // Tìm kiếm theo tên danh mục
-        CategoryAPI.searchCategory({name: search, page, size, id, active}).then(r => {
+        categoryAPI.searchCategory({ name: search, page, size, id, active }).then(r => {
             setList(r?.content || []);
             setTotal(r?.totalElements || 0);
         });
     }
 
     // hàm xử lý khi bấm nút sửa (icon bút chì)
-    const handleFillData = (record) => {
+    const handleFillData = (record) => { // record truy cập giá trị từng dòng 
         setId(record.id);
         setName(record.name);
         setActive(record.active ? "true" : "false");
@@ -112,7 +101,7 @@ const CategoryPageForm = () => {
         try {
             const response = await categoryAPI.getAll(page, size);
             setList(response?.content || []);
-            setTotal(response?.totalElements);
+            setTotal(response?.totalElements || 0);
         } catch (error) {
             console.log('Failed to fetch product list: ', error);
         }
@@ -128,7 +117,7 @@ const CategoryPageForm = () => {
         setSearch('');
 
         setPage(0);
-        setSize(5);
+        setSize(size);
         fetchList().then(r => r);
     }
     useEffect(() => {
@@ -145,31 +134,31 @@ const CategoryPageForm = () => {
                             <h5>Quản lý loại hàng</h5>
                             <div className="d-flex justify-content-between mt-4">
                                 <div>
-                            <span className="text-color">Hiển thị
-                                <Select
-                                    className="input-option"
-                                    value={size}
-                                    style={{width: '80px'}}
-                                    onChange={handleSizeChange}
-                                >
-                                    <Select.Option value={10}>10</Select.Option>
-                                    <Select.Option value={9}>9</Select.Option>
-                                    <Select.Option value={8}>8</Select.Option>
-                                    <Select.Option value={7}>7</Select.Option>
-                                </Select>
-                                mục</span>
+                                    <span className="text-color">Hiển thị
+                                        <Select
+                                            className="input-option"
+                                            value={size}
+                                            style={{ width: '80px' }}
+                                            onChange={handleSizeChange}
+                                        >
+                                            <Select.Option value={10}>10</Select.Option>
+                                            <Select.Option value={9}>9</Select.Option>
+                                            <Select.Option value={8}>8</Select.Option>
+                                            <Select.Option value={7}>7</Select.Option>
+                                        </Select>
+                                        mục</span>
                                 </div>
                                 <div className="d-flex">
                                     <div className="me-2">
                                         <Input className="form-control input" placeholder="Tìm kiếm danh mục"
-                                               value={search}
-                                               onChange={(e) => setSearch(e.target.value)}
+                                            value={search}
+                                            onChange={(e) => setSearch(e.target.value)}
                                         />
                                     </div>
                                     <div>
                                         <Button type="primary" className="text-white rounded-3"
-                                                onClick={handleSearch}
-                                                style={{backgroundColor: '#644c38'}}>
+                                            onClick={handleSearch}
+                                            style={{ backgroundColor: '#644c38' }}>
                                             <i className="fa-solid fa-magnifying-glass"></i>
                                         </Button>
                                     </div>
@@ -178,16 +167,16 @@ const CategoryPageForm = () => {
                             <Form className="d-flex flex-wrap align-items-center mt-4"
                             >
                                 <Form.Item className="mb-3 me-2" name={'name'}
-                                           rules={[{required: true, message: 'Vui lòng nhập tên danh mục!'}]}>
+                                    rules={[{ required: true, message: 'Vui lòng nhập tên danh mục!' }]}>
                                     <label className="form-label form-label-sm">Tên danh mục</label>
                                     <Input className="form-control form-control-sm input"
-                                           value={name}
-                                           onChange={(e) => setName(e.target.value)}
+                                        value={name}
+                                        onChange={(e) => setName(e.target.value)}
                                     />
                                 </Form.Item>
                                 {!isAddMode && (
                                     <Form.Item className="mb-3 me-5"
-                                               rules={[{required: true, message: 'Vui lòng chọn trạng thái!'}]}>
+                                        rules={[{ required: true, message: 'Vui lòng chọn trạng thái!' }]}>
                                         <label className="form-label form-label-sm">Trạng thái</label>
                                         <Select
                                             value={active}
@@ -201,55 +190,46 @@ const CategoryPageForm = () => {
                                 )}
                                 <Form.Item className="mb-3 mt-4">
                                     <Button type="primary" className="me-2 button-action"
-                                            onClick={onFinish}
+                                        onClick={onFinish}
                                     >Lưu</Button>
                                     <Button className="button-action"
-                                            onClick={handleReset}
+                                        onClick={handleReset}
                                     >Làm mới</Button>
                                 </Form.Item>
                             </Form>
                             {/* table */}
                             <Table className="table text-center align-middle" dataSource={list} pagination={false}>
-                                <Table.Column title="ID" dataIndex="id" key="id"/>
-                                <Table.Column title="Tên danh mục" dataIndex="name" key="name"/>
+                                <Table.Column title="ID" dataIndex="id" key="id" />
+                                <Table.Column title="Tên danh mục" dataIndex="name" key="name" />
                                 <Table.Column
                                     title="Trạng thái"
                                     dataIndex="active"
                                     key="active"
                                     render={(text, record) => (
                                         <Badge status="success"
-                                               text={record?.active === true ? 'Hiển thị' : 'Ẩn'}/>)}
+                                            text={record?.active === true ? 'Hiển thị' : 'Ẩn'} />)}
                                 />
                                 <Table.Column
                                     title=""
                                     key="action"
                                     render={(text, record) => (<Space size="middle">
-                                        <a href="#" className="me-2" style={{color: '#644c38'}}
-                                           onClick={() => handleFillData(record)}
+                                        <a href="#" className="me-2" style={{ color: '#644c38' }}
+                                            onClick={() => handleFillData(record)}
                                         >
-                                            <EditOutlined style={{width: '10px', height: '10px'}}/>
+                                            <EditOutlined style={{ width: '10px', height: '10px' }} />
                                         </a>
                                     </Space>)}
                                 />
                             </Table>
-                            
+
                             <Pagination
-                                // showSizeChanger
-                                onShowSizeChange={onShowSizeChange}
-                                onChange={onPageChange}
-                                // showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} items`}
-                                defaultCurrent={page}
+                                pageSize={size}
                                 total={total}
-                            />
-                            <div className="d-flex justify-content-end">
-                            <div className="btn-group border" role="group" aria-label="Basic example">
-                                <Button type="default" className="border"
-                                        onClick={() => handlePageChange(page - 1)}>Trước</Button>
-                                <Button type="default" className="border"
-                                        onClick={() => handlePageChange(page + 1)}>Sau</Button>
-                            </div>
-                        </div>
-                        </div>
+                                prevIcon={<span onClick={() => handlePageChange(page - 1)}>Trước</span>}
+                                nextIcon={<span onClick={() => handlePageChange(page + 1)}>Sau</span>}
+                                onChange={onPageChange}
+                            />      
+                             </div>
                     </div>
                 </Form.Item>
             </Form>

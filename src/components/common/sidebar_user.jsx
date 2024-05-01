@@ -20,7 +20,7 @@ const Sidebar = ({ children }) => {
       icon: <i class="fa-solid fa-arrows-rotate"></i>,
     },
     {
-      path: "",
+      path: "/teddy-store/Logout",
       name: "Đăng xuất",
       icon: <i class="fa-solid fa-right-from-bracket"></i>,
     },
