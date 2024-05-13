@@ -21,6 +21,7 @@ export default function Checkout() {
   const [nameAddress, setNameAddress] = useState("");
   const [typeAddress, setTypeAddress] = useState("");
   const [subAddress, setSubAddress] = useState("");
+  const [idCart, setIdCart] = useState("");
   const quantity_pro = useRef(null);
   const quantity_ser = useRef(null);
   const price_unit = useRef(null);
@@ -30,6 +31,7 @@ export default function Checkout() {
   const amount = useRef(null);
   const id_dt_pro = useRef(null);
   const id_ser = useRef(null);
+  const id_acc = userProfile.id.toString();
 
   const generateRandomNumbers = () => {
     const min = 1000000000;
@@ -155,40 +157,70 @@ export default function Checkout() {
 
   const addNewOrder = async (dataOrder) => {
     try {
-      await axios.post(
+      const response = await axios.post(
         "http://localhost:7070/teddy-store/addNewOrder",
         dataOrder
       );
+      if (response.statusCode === 200) {
+        Swal.fire({
+          icon: "success",
+          title: "Đặt hàng thành công!",
+          showConfirmButton: false,
+          timer: 3000,
+        });
+      }
     } catch (error) {
       console.error("Lỗi khi thực hiện yêu cầu đặt hàng:", error);
+      throw error;
     }
   };
 
-  const addNewOrderDetail = async (detailOrderData) => {
+  const handleConfirmAddNewOrder = async (event) => {
+    event.preventDefault();
+
     try {
-      await axios.post(
-        "http://localhost:7070/teddy-store/addNewOrderDetail",
-        detailOrderData
-      );
+      const currentDate = new Date();
+      const year = currentDate.getFullYear();
+      const month = (currentDate.getMonth() + 1).toString().padStart(2, "0");
+      const day = currentDate.getDate().toString().padStart(2, "0");
+      const formattedDate = `${year}-${month}-${day}`;
+      const dataOrder = {
+        id: id.toString(),
+        account: {
+          id: id_acc,
+        },
+        date_order: formattedDate,
+        status: "Đặt thành công",
+      };
+      await addNewOrder(dataOrder);
+      await handleConfirmAddNewOrderDetail(dataOrder.id);
     } catch (error) {
-      console.log("Error: " + error);
+      console.error("Lỗi khi thêm đơn đặt hàng mới:", error);
     }
   };
 
-  const handleConfirmAddNewOrderDetail = async (idOrđer) => {
+  const handleConfirmAddNewOrderDetail = async (orderId) => {
     try {
+      const price_proString = price_unit.current.value;
+      const price_serString = price_unit_ser.current.value;
+      const amountString = amount.current.value;
+      const priceNumber = parseFloat(price_proString.replace(/[^\d.,]/g, ""));
+      const priceSerNumber = parseFloat(
+        price_serString.replace(/[^\d.,]/g, "")
+      );
+      const amountNumber = parseFloat(amountString.replace(/[^\d.,]/g, ""));
       const detailOrderData = {
         id: id.toString(),
         quantity_pro: quantity_pro.current.value,
-        price_unit: parseFloat(price_unit.current.value),
+        price_unit: priceNumber * 1000,
         quantity_ser: quantity_ser.current.value,
-        price_unit_ser: parseFloat(price_unit_ser.current.value),
+        price_unit_ser: priceSerNumber * 1000,
         address: address.current.value,
         note: note.current.value,
         method_payment: selectMethodPayment,
-        amount: parseInt(amount.current.value),
+        amount: amountNumber * 1000,
         order: {
-          id: idOrđer,
+          id: orderId,
         },
         detailsProduct: {
           id: id_dt_pro.current.value,
@@ -199,27 +231,57 @@ export default function Checkout() {
       };
       if (selectMethodPayment === "COD") {
         await addNewOrderDetail(detailOrderData);
+        await deleteIdCart();
+        Swal.fire({
+          icon: "success",
+          title: "Đặt hàng thành công!",
+          showConfirmButton: false,
+          timer: 1000,
+        });
+        setTimeout(() => {
+          navigate("/teddy-store/thanks");
+        }, 2000);
+      } else if (selectMethodPayment === "MOMO") {
+        Swal.fire({
+          icon: "success",
+          title: "Tính năng đang phát triển!",
+          showConfirmButton: false,
+          timer: 3000,
+        });
+      } else if (selectMethodPayment === "VNP") {
+        getPaymentUrl(orderId);
+        await deleteIdCart();
+        await addNewOrderDetail(detailOrderData);
+      }
+    } catch (error) {
+      console.log("Error adding order detail" + error);
+      throw new Error("Error adding order detail");
+    }
+  };
+
+  const addNewOrderDetail = async (detailOrderData) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:7070/teddy-store/addNewOrderDetail",
+        detailOrderData
+      );
+      if (response.status === 200) {
         Swal.fire({
           icon: "success",
           title: "Đặt hàng thành công!",
           showConfirmButton: false,
           timer: 3000,
         });
-        setTimeout(() => {
-          navigate("/teddy-store/cart");
-        }, 2000);
-      } else if (selectMethodPayment === "MOMO") {
+      } else {
         Swal.fire({
-          icon: "success",
-          title: "Đặt hàng thành công, momo!",
+          icon: "error",
+          title: "Đặt hàng thất bại!",
           showConfirmButton: false,
           timer: 3000,
         });
-      } else if (selectMethodPayment === "VNP") {
-        getPaymentUrl(amount);
       }
     } catch (error) {
-      console.log("Error adding order" + error);
+      console.log("Error: " + error);
     }
   };
 
@@ -227,11 +289,13 @@ export default function Checkout() {
     window.location.href = paymentUrl;
   };
 
-  const getPaymentUrl = async (amount) => {
+  const getPaymentUrl = async (orderId) => {
     try {
+      const amountString = amount.current.value;
+      const amountNumber = parseInt(amountString.replace(/[^\d]/g, ""), 10);
+      const amountCurrency = amountNumber;
       const response = await axios.get(
-        `http://localhost:7070/teddy-store/VNPay?amount=${amount}`,
-        amount
+        `http://localhost:7070/teddy-store/VNPay?amountValue=${amountCurrency}&orderId=${orderId}`
       );
       if (response.status === 200) {
         const paymentUrl = response.data;
@@ -244,35 +308,9 @@ export default function Checkout() {
     }
   };
 
-  const handleConfirmAddNewOrder = async (event) => {
-    event.preventDefault();
-
-    try {
-      const currentDate = new Date();
-      const year = currentDate.getFullYear();
-      const month = (currentDate.getMonth() + 1).toString().padStart(2, "0");
-      const day = currentDate.getDate().toString().padStart(2, "0");
-
-      const formattedDate = `${year}-${month}-${day}`;
-      const dataOrder = {
-        id: id.toString(),
-        account: userProfile.id,
-        date_order: formattedDate,
-        status: "Đặt thành công",
-      };
-      const result = await handleConfirmAddNewOrderDetail(dataOrder.id);
-      if (result) {
-        await addNewOrder(dataOrder);
-      } else {
-        return;
-      }
-    } catch (error) {
-      console.error("Lỗi khi thêm đơn đặt hàng mới:", error);
-    }
-  };
-
   useEffect(() => {
     renderDataAcc();
+    getIdCart();
     calculateTotalPrice();
   }, []);
 
@@ -322,6 +360,27 @@ export default function Checkout() {
 
   const closeModalAddress = () => {
     setModalAddressIsOpen(false);
+  };
+
+  const deleteIdCart = async () => {
+    try {
+      await axios.delete(
+        `http://localhost:7070/teddy-store/delete-cart/${idCart}`
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getIdCart = async () => {
+    try {
+      const result = await axios.get(
+        `http://localhost:7070/teddy-store/getIdCart/${userProfile.id}/${id_dt_pro.current.value}`
+      );
+      setIdCart(result.data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -650,7 +709,7 @@ export default function Checkout() {
               className="btn"
               onClick={handleConfirmAddNewOrder}
             >
-              Gửi đơn hàng
+              Xác nhận
             </button>
           </div>
         </div>

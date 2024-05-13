@@ -2,22 +2,29 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import "../user/css/topBear.css";
+import Swal from "sweetalert2";
 
 export default function TopBear() {
+  const userProfile = JSON.parse(localStorage.getItem("userProfile"));
   const [topBear, setTopBear] = useState([]);
   const [size, setSize] = useState({});
+  const [id_dt_pro, setId_dt_pro] = useState("");
   const [selectedSize, setSelectedSize] = useState({});
   const [selectedPrice, setSelectedPrice] = useState({});
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const productsResponse = await axios.get("http://localhost:7070/teddy-store/getAllProduct");
+        const productsResponse = await axios.get(
+          "http://localhost:7070/teddy-store/getAllProduct"
+        );
         setTopBear(productsResponse.data);
 
         const sizesData = await Promise.all(
           productsResponse.data.map(async (product) => {
-            const sizesResponse = await axios.get(`http://localhost:7070/teddy-store/getSizeBy/${product.id}`);
+            const sizesResponse = await axios.get(
+              `http://localhost:7070/teddy-store/getSizeBy/${product.id}`
+            );
             return { productId: product.id, sizes: sizesResponse.data };
           })
         );
@@ -38,13 +45,13 @@ export default function TopBear() {
 
   useEffect(() => {
     const initialPrices = {};
-    topBear.forEach(product => {
+    topBear.forEach((product) => {
       const firstSize = size[product.id]?.[0];
       if (firstSize) {
         initialPrices[product.id] = firstSize.price;
-        setSelectedSize(prevState => ({
+        setSelectedSize((prevState) => ({
           ...prevState,
-          [product.id]: firstSize
+          [product.id]: firstSize,
         }));
       }
     });
@@ -52,14 +59,71 @@ export default function TopBear() {
   }, [topBear, size]);
 
   const handleSizeClick = (productId, selectedSize) => {
-    setSelectedSize(prevState => ({
+    axios
+      .get(
+        `http://localhost:7070/teddy-store/getIdDetailsBy/${selectedSize.id}/${productId}`
+      )
+      .then((response) => {
+        setId_dt_pro(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching id_dt_pro:", error);
+      });
+
+    setSelectedSize((prevState) => ({
       ...prevState,
-      [productId]: selectedSize
+      [productId]: selectedSize,
     }));
-    setSelectedPrice(prevState => ({
+    setSelectedPrice((prevState) => ({
       ...prevState,
-      [productId]: selectedSize.price
+      [productId]: selectedSize.price,
     }));
+  };
+
+  const currentDate = new Date();
+  const year = currentDate.getFullYear();
+  let month = currentDate.getMonth() + 1;
+  month = month < 10 ? "0" + month : month;
+  let day = currentDate.getDate();
+  day = day < 10 ? "0" + day : day;
+  const formattedDate = `${year}-${month}-${day}`;
+
+  const generateRandomNumber = () => {
+    const min = 1000000000;
+    const max = 9999999999;
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  };
+
+  const formData = {
+    id: generateRandomNumber().toString(),
+    quantity_pro: 1,
+    quantity_ser: 0,
+    date_add: formattedDate,
+    service: {
+      id: "1234567893",
+    },
+    detailsProduct: {
+      id: id_dt_pro,
+    },
+    account: {
+      id: userProfile.id,
+    },
+  };
+
+  const handleAddToCart = async () => {
+    try {
+      const result = await axios.post("http://localhost:7070/teddy-store/add", formData);
+      if(result.status ===200){
+        Swal.fire({
+          icon: "success",
+          title: "Thêm vào giỏ hàng thành công",
+          showConfirmButton: false,
+          timer: 1000,
+        });
+      }
+    } catch (error) {
+      console.log("Error add to Cart | TopBear: " + error.message);
+    }
   };
 
   return (
@@ -78,10 +142,13 @@ export default function TopBear() {
                   className="img-fluid"
                 />
                 <div className="card-product-hover">
-                  <Link to="#" className="btn mx-2 btn-primary">
+                  <Link onClick={handleAddToCart} className="btn mx-2 btn-primary">
                     <i className="fa-solid fa-bag-shopping"></i>
                   </Link>
-                  <Link to={`/teddy-store/detail_products/${product.id}`} className="btn mx-2 btn-primary">
+                  <Link
+                    to={`/teddy-store/detail_products/${product.id}`}
+                    className="btn mx-2 btn-primary"
+                  >
                     <i className="fa-regular fa-eye"></i>
                   </Link>
                   <Link to="#" className="btn mx-2 btn-primary">
@@ -98,10 +165,13 @@ export default function TopBear() {
                         <div className="price-product mb-2">
                           {selectedPrice[product.id] != null && (
                             <p className="card-text">
-                              {selectedPrice[product.id].toLocaleString("vi-VN", {
-                                style: "currency",
-                                currency: "VND",
-                              })}
+                              {selectedPrice[product.id].toLocaleString(
+                                "vi-VN",
+                                {
+                                  style: "currency",
+                                  currency: "VND",
+                                }
+                              )}
                             </p>
                           )}
                         </div>
@@ -118,8 +188,15 @@ export default function TopBear() {
                         <div className="button">
                           <button
                             type="button"
-                            className={`btn mx-2 mb-2 ${selectedSize[product.id] && selectedSize[product.id].id === sizeItem.id ? 'selected' : ''}`}
-                            onClick={() => handleSizeClick(product.id, sizeItem)}
+                            className={`btn mx-2 mb-2 ${
+                              selectedSize[product.id] &&
+                              selectedSize[product.id].id === sizeItem.id
+                                ? "selected"
+                                : ""
+                            }`}
+                            onClick={() =>
+                              handleSizeClick(product.id, sizeItem)
+                            }
                           >
                             {sizeItem.size_no}
                           </button>

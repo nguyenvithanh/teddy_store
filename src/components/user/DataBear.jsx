@@ -4,14 +4,27 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
 
 export default function GauBongHoatHinh() {
+  const userProfile = JSON.parse(localStorage.getItem("userProfile"));
   const [dataBear, setDataBear] = useState([]);
   const [size, setSize] = useState({});
+  const [id_dt_pro, setId_dt_pro] = useState("");
   const [selectedSize, setSelectedSize] = useState({});
   const [selectedPrice, setSelectedPrice] = useState({});
 
   const handleSizeClick = (productId, size) => {
+    axios
+      .get(
+        `http://localhost:7070/teddy-store/getIdDetailsBy/${size.id}/${productId}`
+      )
+      .then((response) => {
+        setId_dt_pro(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching id_dt_pro:", error);
+      });
     setSelectedSize((prevSelectedSize) => ({
       ...prevSelectedSize,
       [productId]: size,
@@ -64,6 +77,53 @@ export default function GauBongHoatHinh() {
 
     fetchData();
   }, []);
+  
+
+  const currentDate = new Date();
+  const year = currentDate.getFullYear();
+  let month = currentDate.getMonth() + 1;
+  month = month < 10 ? "0" + month : month;
+  let day = currentDate.getDate();
+  day = day < 10 ? "0" + day : day;
+  const formattedDate = `${year}-${month}-${day}`;
+
+  const generateRandomNumber = () => {
+    const min = 1000000000;
+    const max = 9999999999;
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  };
+
+  const formData = {
+    id: generateRandomNumber().toString(),
+    quantity_pro: 1,
+    quantity_ser: 0,
+    date_add: formattedDate,
+    service: {
+      id: "1234567893",
+    },
+    detailsProduct: {
+      id: id_dt_pro,
+    },
+    account: {
+      id: userProfile.id,
+    },
+  };
+
+  const handleAddToCart = async () => {
+    try {
+      const result = await axios.post("http://localhost:7070/teddy-store/add", formData);
+      if(result.status ===200){
+        Swal.fire({
+          icon: "success",
+          title: "Thêm vào giỏ hàng thành công",
+          showConfirmButton: false,
+          timer: 1000,
+        });
+      }
+    } catch (error) {
+      console.log("Error add to Cart | TopBear: " + error.message);
+    }
+  };
 
   const settings = {
     dots: true,
@@ -86,13 +146,13 @@ export default function GauBongHoatHinh() {
                   className="img-fluid"
                 />
                 <div className="card-product-hover">
-                  <Link type="submit" className="btn mx-2 btn-primary">
+                  <Link onClick={handleAddToCart} type="submit" className="btn mx-2 btn-primary">
                     <i className="fa-solid fa-bag-shopping"></i>
                   </Link>
                   <Link
                     type="submit"
                     className="btn mx-2 btn-primary"
-                    to={`/detail_products/${product.id}`}
+                    to={`/teddy-store/detail_products/${product.id}`}
                   >
                     <i className="fa-regular fa-eye"></i>
                   </Link>
@@ -132,7 +192,6 @@ export default function GauBongHoatHinh() {
                       <div className="size-product">
                         <div className="button">
                           <button
-
                             type="button"
                             className={`btn mx-2 mb-2 ${
                               selectedSize[product.id] &&

@@ -8,12 +8,13 @@ import logoHeader from "./images/XINH_logoheader.png";
 import SizeColorPageForm from "./Manage_size_and_color";
 import CategoryPageForm from "./Manage_product_categories";
 import ProductPageForm from "./Product_management";
-import Service from "./All_products";
-import AllProductPageForm from "./Service";
+import Service from "./Service";
+import AllProductPageForm from "./All_products";
 import DiscountPageForm from "./Discount";
 import PanelListCustomer from "./PanelListCustomer";
 import PanelReviewProduct from "./PanelReviewProduct";
 import PanelManagementBanner from "./PanelManagementBanner";
+import Manage_order from "./manage_order";
 const { Header, Content, Footer, Sider } = Layout;
 function getItem(label, key, icon, children) {
   return {
@@ -58,6 +59,7 @@ const Indexadmin = () => {
     6: <DiscountPageForm />,
     7: <Service/>,
     8: <PanelListCustomer />,
+    9: <Manage_order/>,
     10: <PanelReviewProduct />,
     11: <PanelManagementBanner />
     // Thêm các item khác nếu cần

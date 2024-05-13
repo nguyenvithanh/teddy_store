@@ -21,7 +21,7 @@ const DiscountPageForm = () => {
     const [listProduct, setListProduct] = useState([]);
     const [listDiscount, setListDiscount] = useState([]);
     const [page, setPage] = useState(0);
-    const [size, setSize] = useState(5);
+    const [size, setSize] = useState(10);
     const [total, setTotal] = useState(0);
 
     const [id, setId] = useState('-1');
@@ -37,22 +37,23 @@ const DiscountPageForm = () => {
 
     const fetchListProduct = async () => {
         try {
-            const response = await productAPI.getAllProductActive();
+            const response = await productAPI.getAllProductNoDiscount();
             setListProduct(response || []);
+            console.log(response);
         } catch (error) {
             console.log('Failed to fetch product list: ', error);
         }
     }
     useEffect(() => {
-        fetchListProduct().then(r => r);
+        fetchListProduct().then(r => r); //chỉ định rằng fetchListProduct chỉ được gọi một lần khi component được render lần đầu tiên và không phụ thuộc vào bất kỳ giá trị nào khác.
     }, []);
 
     // xử lý khi thay đổi giá trị của select product
     const handleSelectProduct = (value) => {
         setSelectedProduct(value);
-        const product = listProduct.find(p => p.detailsProduct[0].id === value);
+        const product = listProduct.find(p => p.detailsProduct[0].id === value); //tìm sản phẩm trong listProduct dựa theo value đc chọn.
+        console.log(value);
         if (product) {
-            // format currency
             setPrice(vietNameCurrencyFormat(product?.detailsProduct[0]?.price));
         }
     }
@@ -63,7 +64,6 @@ const DiscountPageForm = () => {
     }
 
     const handlePageChange = (newPage) => {
-        console.log('ok', total);
         // Nếu newPage < 0 hoặc newPage > tổng số trang thì không làm gì cả
         if (newPage < 0) {
             notification.warning({
@@ -90,9 +90,10 @@ const DiscountPageForm = () => {
         setPrice('');
         setDiscount(0);
         setPage(0);
-        setSize(5);
+        setSize(10);
         setIsModeAdd(true);
         fetchList().then(r => r);
+        fetchListProduct().then(r => r);
     }
 
     const handleSubmit = async () => {
@@ -157,6 +158,7 @@ const DiscountPageForm = () => {
         setPrice(vietNameCurrencyFormat(record.detailsProduct.price));
         setDiscount(record.price_sale);
         setIsModeAdd(false);
+        console.log(record);
     }
     const handleSizeChange = (value) => {
         setSize(value);
@@ -214,10 +216,10 @@ const DiscountPageForm = () => {
     }, [page, size]);
 
 
-    // const onShowSizeChange = (current, pageSize) => {
-    //     setPage(current - 1);
-    //     setSize(pageSize);
-    // };
+    const onShowSizeChange = (current, pageSize) => {
+        setPage(current - 1);
+        setSize(pageSize);
+    };
     const onPageChange = (page, pageSize) => {
         setPage(page - 1);
     };
@@ -233,12 +235,15 @@ const DiscountPageForm = () => {
                                     <label htmlFor="colorSelect" className="form-label">Tên sản phẩm</label>
                                     <Select className="input" id="colorSelect"
                                         aria-required={true}
-                                        value={selectedProduct}
+                                        value={selectedProduct} // hiển thi giá trị(sản phẩm) đc chọn
                                         onChange={handleSelectProduct}>
                                         <Select.Option value="">Chọn sản phẩm</Select.Option>
                                         {listProduct.map((c, index) => (
-                                            <Select.Option key={index}
-                                                value={c.detailsProduct[0].id}>{c.name}</Select.Option>
+                                            <Select.Option key={index} // Mỗi phần tử trong một danh sách cần có một key duy nhất 
+                                            //index được sử dụng làm key vì nó là một số nguyên duy nhất đại diện cho vị trí của phần tử trong mảng
+                                                // value={c.detailsProduct[0].id}
+                                                value=""
+                                                >{c.name}</Select.Option>
                                         ))}
                                     </Select>
                                 </div>
@@ -270,11 +275,10 @@ const DiscountPageForm = () => {
                                     </div>
                                     <div className="col-md-6">
                                         <label className="form-label">Giá giảm</label>
-                                        <InputNumber className="form-control input" placeholder="990.000"
+                                        <InputNumber className="form-control input" placeholder="0"
                                             required={true}
                                             value={discount}
                                             min={0}
-                                            // step={0.1}
                                             onChange={(e) => setDiscount(e)}
                                         />
                                     </div>
@@ -393,22 +397,13 @@ const DiscountPageForm = () => {
                     />
 
                 </Table>
-                <Pagination
-                    // showSizeChanger
-                    // onShowSizeChange={onShowSizeChange}
-                    onChange={onPageChange}
-                    showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} items`}
-                    defaultCurrent={page}
-                    total={total}
-                />
-                   <div className="d-flex justify-content-end">
-                            <div className="btn-group border" role="group" aria-label="Basic example">
-                                <Button type="default" className="border"
-                                        onClick={() => handlePageChange(page - 1)}>Trước</Button>
-                                <Button type="default" className="border"
-                                        onClick={() => handlePageChange(page + 1)}>Sau</Button>
-                            </div>
-                        </div>
+                <Pagination            
+                   pageSize={size}
+                   total={total}
+                   prevIcon={<span onClick={() => handlePageChange(page - 1)}>Trước</span>}
+                   nextIcon={<span onClick={() => handlePageChange(page + 1)}>Sau</span>}
+                   onChange={onPageChange}                           
+                />              
             </Form.Item>
         </Form>
     );

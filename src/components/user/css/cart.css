@@ -13,7 +13,7 @@
   color: var(--base);
 }
 
-.card-cart {
+.table {
   border-radius: 30px;
   background-color: #f8f7f6;
 }
@@ -21,9 +21,7 @@
 .table tr td {
   color: var(--base);
   font-weight: 500;
-  border: 0px;
 }
-
 
 .table tr:last-child {
   border-bottom: 1px solid var(--base-light);
@@ -48,12 +46,17 @@
   color: var(--base);
 }
 
+.table td .name-product,
+.color-product,
+.size-product {
+  color: var(--base);
+}
+
 .table td .quantity {
   width: 3rem;
   border: none;
   outline: none;
   margin: 0.5rem;
-  cursor: default;
   text-align: center;
   color: var(--base);
   padding: 0.2rem 0.6rem;

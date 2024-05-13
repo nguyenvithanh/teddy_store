@@ -2,12 +2,9 @@ import React, { useEffect, useState } from "react";
 import Navigation from "../common/nav.jsx";
 import "./css/register.css"
 import userAPI from "../api/userAPI";
-import { useNavigate } from "react-router-dom";
 
 
 export default function Register() {
-    const navigate = useNavigate();
-    const [emailForgotPassword, setEmailForgotPassword] = useState(''); // email to reset password
     const [messageEmailInvalid, setMessageEmailInvalid] = useState('Email không hợp lệ');
     const [messageUsernameInvalid, setMessageUsernameInvalid] = useState('Vui lòng nhập nhập tên đăng nhập.');
 
@@ -35,8 +32,12 @@ export default function Register() {
     const [isUsernameValid, setIsUsernameValid] = useState(false);
     const [isPasswordValid, setIsPasswordValid] = useState(false);
     const [isConfirmPasswordValid, setIsConfirmPasswordValid] = useState(false);
-
+ 
+    
     useEffect(() => {
+        if (!gender) {
+            setGender('true');
+        }
         setIsNameValid(name.trim() !== '');
         setIsPhoneValid(phone.trim() !== '' && isVietnamesePhoneNumber(phone));
         setIsDobValid(dob.trim() !== '');
@@ -62,8 +63,8 @@ export default function Register() {
         password,
         confirmPassword
     ]);
-    // { Click vào input mới bắt đầu bắt lỗi
-const [nameTouched, setNameTouched] = useState(false);
+
+    const [nameTouched, setNameTouched] = useState(false);
     const [phoneTouched, setPhoneTouched] = useState(false);
     const [dobTouched, setDobTouched] = useState(false);
     const [emailTouched, setEmailTouched] = useState(false);
@@ -96,7 +97,7 @@ const [nameTouched, setNameTouched] = useState(false);
             password: password,
             confirmPassword: confirmPassword
         }
-        // check value of data is not empty
+       
     
         if (!isNameValid
             || !isPhoneValid
@@ -157,7 +158,7 @@ const [nameTouched, setNameTouched] = useState(false);
     };
  
     return (<>
-<div className="container-fluid p-0 m-0">
+        <div className="container-fluid p-0 m-0">
             <div className="container-fluid">{<Navigation />}</div>
 
         </div>
@@ -211,7 +212,7 @@ const [nameTouched, setNameTouched] = useState(false);
                                 )}
                                 {(isUnderAge(dob) && dobTouched) && (
                                     <div className="invalid">
-Bạn phải đủ 12 tuổi để đăng ký.
+                                        Bạn phải đủ 12 tuổi để đăng ký.
                                     </div>
                                 )}
                             </div>
@@ -231,7 +232,8 @@ Bạn phải đủ 12 tuổi để đăng ký.
                             <div className="d-flex">
                                 <label className="form-label me-5">Giới tính</label>
                                 <div className="form-check me-2">
-                                    <input className="form-check-input" type="radio" name="gender" id="male"
+                                    <input className="form-check-input" type="radio" name="gender" id="male" 
+                                    checked={gender==='true'}
                                         defaultValue="true" required={true}
                                         onChange={(e) => setGender(e.target.value)}
                                     />
@@ -260,7 +262,7 @@ Bạn phải đủ 12 tuổi để đăng ký.
                                     {messageUsernameInvalid}
                                 </div>
                             )}
-{nameTouched && isUsernameSpecialChar && (
+                            {nameTouched && isUsernameSpecialChar && (
                                 <div className="invalid mb-0">
                                     Tên đăng nhập không được chứa kí tự đặc biệt
                                 </div>
@@ -312,7 +314,7 @@ Bạn phải đủ 12 tuổi để đăng ký.
                 {/* end form */}
                 <div className="text-center mb-4">
                     <hr className="my-4 mx-3" style={{
-border: 'none',
+                        border: 'none',
                         borderTop: '1px solid #000',
                         width: '30%',
                         display: 'inline-block',

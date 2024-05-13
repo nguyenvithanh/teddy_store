@@ -5,13 +5,13 @@ import "../user/css/infor.css";
 import "../user/css/user.css";
 import Nav from "../common/nav";
 import Footer from "../common/footer";
-import {message } from 'antd';
+import {message,Modal } from 'antd';
 // import Modal from "../user/Infor_modal";
 // import img from "../../assets/upload.jpg";
 const Infor = () => {
   const [infor, setInfor] = useState([]);
   const updatedInfor = [...infor];
-  // const [modalOpen, setModalOpen] = useState(false);
+  const [confirmModalVisible, setConfirmModalVisible] = useState(false); // State để kiểm soát hiển thị của hộp thoại xác nhận
   
   const userProfile = JSON.parse(localStorage.getItem("userProfile"));
   useEffect(() => {
@@ -134,33 +134,117 @@ const Infor = () => {
       return updatedInfor;
     });
   };
-  
   const handleUpdate = async () => {
+    const isValidBirthday = (birthday) => {
+      // Biểu thức chính quy để kiểm tra định dạng ngày tháng năm (YYYY-MM-DD)
+      const birthdayPattern = /^\d{4}-\d{2}-\d{2}$/;
+  
+      // Kiểm tra định dạng ngày tháng năm và người dùng phải ít nhất 12 tuổi
+      if (!birthdayPattern.test(birthday)) {
+        return false;
+      }
+  
+      // Tách ngày, tháng, năm từ chuỗi ngày sinh
+      const parts = birthday.split('-');
+      const year = parseInt(parts[0], 10);
+      const month = parseInt(parts[1], 10);
+      const day = parseInt(parts[2], 10);
+  
+      // Tính tuổi từ ngày sinh
+      const today = new Date();
+      const birthDate = new Date(year, month - 1, day);
+      const age = today.getFullYear() - birthDate.getFullYear();
+      const monthDiff = today.getMonth() - birthDate.getMonth();
+  
+      // Kiểm tra ngày sinh không phải là ngày trong tương lai và người dùng phải ít nhất 12 tuổi
+      if (
+        birthDate > today || // Ngày sinh là ngày trong tương lai
+        (monthDiff === 0 && today.getDate() < day) || // Ngày sinh trong cùng tháng và ngày trong tương lai
+        (monthDiff < 0) // Ngày sinh trong tháng sau
+      ) {
+        return false;
+      }
+  
+      // Kiểm tra người dùng phải ít nhất 12 tuổi
+      if (age < 12) {
+        return false;
+      }
+  
+      return true;
+    };
+  
+    const isValidPhoneNumber = (phoneNumber) => {
+      // Biểu thức chính quy để kiểm tra định dạng số điện thoại (ví dụ cho số điện thoại Việt Nam)
+      const phonePattern = /^(0[1-9][0-9]{8,9})$/;
+      return phonePattern.test(phoneNumber);
+    };
+  
+    const isValidEmail = (email) => {
+      // Biểu thức chính quy để kiểm tra định dạng email
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailPattern.test(email);
+    };            
+  
+    // Kiểm tra các trường bắt buộc và thông báo lỗi tương ứng
+    const isFormValid = infor.every(acc => {
+      if (!acc.name) {
+        message.error('Vui lòng nhập họ và tên.');
+        return false;
+      }
+      if (!acc.phone || !isValidPhoneNumber(acc.phone)) {
+        message.error('Số điện thoại không hợp lệ.');
+        return false;
+      }
+      if (!acc.email || !isValidEmail(acc.email)) {
+        message.error('Email không hợp lệ.');
+        return false;
+      }
+      if (!acc.birthday || !isValidBirthday(acc.birthday)) {
+        message.error('Ngày sinh không hợp lệ.');
+        return false;
+      }
+      if (acc.gender === undefined) {
+        message.error('Vui lòng chọn giới tính.');
+        return false;
+      }
+      return true;
+    });
+  
+    if (!isFormValid) {
+      return;
+    }
+  
+    setConfirmModalVisible(true); // Hiển thị hộp thoại xác nhận trước khi cập nhật
+  };
+
+  const handleConfirmUpdate = async () => {
+    setConfirmModalVisible(false); // Ẩn hộp thoại xác nhận
     const avt = updatedInfor.map(avt => avt.avatar).join(',');
     const name = updatedInfor.map(avt => avt.name).join(',');
     const gender = updatedInfor.map(avt => avt.gender).join(',');
     const birthday = updatedInfor.map(avt => avt.birthday).join(',');
     const email = updatedInfor.map(avt => avt.email).join(',');
     const phone = updatedInfor.map(avt => avt.phone).join(',');
-    console.log("inforUpdate", avt,name,gender,phone,email,birthday);
+    console.log("inforUpdate", avt, name, gender, phone, email, birthday);
     try {
-      await axios.put(`http://localhost:7070/teddy-store/updateInfor/${userProfile.id}`, { 
-         
-          avatar: avt,
-          name : name,
-          gender:gender,
-          birthday: birthday,
-          email: email,
-          phone: phone
-         
+      await axios.put(`http://localhost:7070/teddy-store/updateInfor/${userProfile.id}`, {
+        avatar: avt,
+        name: name,
+        gender: gender,
+        birthday: birthday,
+        email: email,
+        phone: phone
       });
       message.success('Thông tin đã được cập nhật thành công');
       console.log("Thông tin đã được cập nhật thành công!");
     } catch (error) {
       console.error("Error updating user info:", error);
+      message.error('Cập nhật thất bại');
     }
   };
-
+  const handleCancelUpdate = () => {
+    setConfirmModalVisible(false); // Ẩn hộp thoại xác nhận
+  };
   return (
     <div className="container-fluid">
       {<Nav />}
@@ -253,7 +337,7 @@ const Infor = () => {
                   <div className="row text_brown">
                     <div className="col-sm-3 text-end fw-bold">Giới tính</div>
                     <div className="col-sm-9">
-                      <div className="ms-5 d-flex">
+                      <div className="ms-5 d-flex gender">
                         <label className="form-check">
                           <input
                             id="true"
@@ -295,12 +379,22 @@ const Infor = () => {
                   >
                     Chỉnh sửa
                   </button> 
+                  
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
+      {/* Hộp thoại xác nhận */}
+      <Modal
+        title="Xác nhận"
+        visible={confirmModalVisible}
+        onOk={handleConfirmUpdate}
+        onCancel={handleCancelUpdate}
+      >
+        <p>Bạn có chắc chắn muốn cập nhật thông tin?</p>
+      </Modal>
       {<Footer />}
     </div>
   );

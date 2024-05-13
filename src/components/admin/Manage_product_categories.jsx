@@ -11,7 +11,7 @@ const CategoryPageForm = () => {
     const [list, setList] = useState([]);
     const [isAddMode, setIsAddMode] = useState(true); 
     const [form] = Form.useForm();
-    const [id, setId] = useState('-1');
+    const [id, setId] = useState('');
     const [name, setName] = useState('');
     const [active, setActive] = useState("true");
     const [total, setTotal] = useState(0);   
@@ -47,6 +47,13 @@ const CategoryPageForm = () => {
             return;
         }
 
+        if ( active === undefined) { // Thêm kiểm tra active === undefined
+            notification.error({
+                description: 'Vui lòng chọn trạng thái!',
+                duration: DURATION, 
+            });
+            return;
+        }
       
         categoryAPI.updateCategory({ id, name, active }).then(r => {         
             if (r === "OK") {

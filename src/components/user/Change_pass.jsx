@@ -11,12 +11,20 @@ const Order = () => {
   const inforAccount = JSON.parse(localStorage.getItem("accInfor"));
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+    if (!oldPassword || !newPassword || !confirmPassword) {
+      message.error("Vui lòng điền đầy đủ thông tin.");
+      return;
+    }
+  
+    if (newPassword !== confirmPassword) {
+      message.error("Nhập lại mật khẩu không khớp với mật khẩu mới.");
+      return;
+    }
     try {
       if (inforAccount && inforAccount.length > 0) {
         const accountId = inforAccount[0].id;
         console.log("ID của tài khoản:", accountId);
-        const response = await axios.put(`http://localhost:7070/teddy-store/UpdatePassword/${accountId}`, {
+        await axios.post(`http://localhost:7070/teddy-store/UpdatePassword/${accountId}`, {
         oldPassword,
         newPassword,
       });
@@ -24,8 +32,14 @@ const Order = () => {
       };
       message.success("Đổi mật khẩu thành công")
     } catch (error) {
-      message.error("Đổi mật khẩu thất bại")
+      message.error("Mật khẩu không tồn tại")
     }
+  };
+  const handleReset = () => {
+    // Đặt lại giá trị của các state về rỗng khi click nút "Hủy"
+    setOldPassword("");
+    setNewPassword("");
+    setConfirmPassword("");
   };
   return (
     <div className="container-fluid">
@@ -76,7 +90,7 @@ const Order = () => {
                   <button className="btn text-light fw-bold bg_brown rounded-5 px-4 me-4" onClick= {handleSubmit}>
                     Lưu
                   </button>
-                  <button className="btn text-light fw-bold bg_brown rounded-5 px-4 ">
+                  <button className="btn text-light fw-bold bg_brown rounded-5 px-4 " onClick={handleReset}>
                     Hủy
                   </button>
                 </div>

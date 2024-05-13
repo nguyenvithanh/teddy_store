@@ -12,6 +12,9 @@ import Infor from "./components/user/Infor.jsx";
 import Order from "./components/user/Order_status.jsx";
 import ChangePass from "./components/user/Change_pass.jsx";
 import DetailOrder from "./components/user/Detail_order.jsx";
+import Service from "./components/user/Service";
+import Contact from "./components/user/contact.jsx";
+import Thanks from "./components/user/Thanks.jsx";
 
 function App() {
   return (
@@ -36,6 +39,9 @@ function App() {
           path="/teddy-store/detail_order"
           element={<DetailOrder />}
         ></Route>
+        <Route path="/teddy-store/service" element={<Service />}></Route>
+        <Route path="/teddy-store/contact" element={<Contact />}></Route>
+        <Route path="/teddy-store/thanks" element={<Thanks />}></Route>
       </Routes>
     </BrowserRouter>
   );

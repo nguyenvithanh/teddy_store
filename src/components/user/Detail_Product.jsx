@@ -159,6 +159,8 @@ export default function Detail_product() {
     let day = currentDate.getDate(); // Lấy ngày hiện tại
     day = day < 10 ? '0' + day : day; // Đảm bảo rằng ngày có 2 chữ số
     const formattedDate = `${year}-${month}-${day}`;
+    const selectedProductServicename = ServicePro.filter(service => service.id).map(service => service.name).join(',');
+    const selectedProductServiceprice = ServicePro.filter(service => service.id).map(service => service.priceSv).join(',');
     const selectedProductServiceIds = ServicePro.filter(service => service.id).map(service => service.id).join(',');
     const id_acc = user.id;
     if (quantity <= 0) {
@@ -170,18 +172,28 @@ export default function Detail_product() {
         const id_dt_pro = response.data;
         const id_dt = id_dt_pro.filter(dt_pro => dt_pro.id).map(dt_pro => dt_pro.id).join(',')
         console.log(id_dt)
+        console.log(selectedProductServiceprice)
         // Tiếp tục xử lý dữ liệu nhận được, ví dụ: thêm vào giỏ hàng
-        const cartData = {
-          id: generateRandomNumber().toString(),
-          quantity_pro: quantity,
-          quantity_ser: quantityy,
-          date_add: formattedDate,
-          service: { id: selectedProductServiceIds },
-          detailsProduct: { id: id_dt },
-          account: { id: id_acc }
-        };
-        localStorage.setItem('itemSelected', JSON.stringify(cartData));
+        const cartData = [{
 
+          id: generateRandomNumber().toString(),
+          id_acc: id_acc,
+          id_dt_pro: id_dt,
+          id_ser: selectedProductServiceIds,
+          color: id_color,
+          date_add: formattedDate,
+          image_pro: products[0].img_url, // assuming products is an array and you want to take the first product's image_url
+          name_pro: products[0].name, // assuming products is an array and you want to take the first product's name
+          name_ser: selectedProductServicename, // Assuming this is fixed for all services or you have a specific way to get this data
+          price_pro: selectedPrice,
+          price_ser: quantityy * selectedProductServiceprice, // Assuming ServicePro is an array and you want to take the first service's priceSv
+          quantity_pro: quantity,
+          quantity_ser: quantityy, // Assuming no quantity for services in your initial data
+          size_no: selectedSize.size_no
+
+        }];
+        localStorage.setItem("itemSelected", JSON.stringify(cartData));
+        navigate('/teddy-store/checkout');
       })
 
       .catch(error => {
@@ -189,7 +201,7 @@ export default function Detail_product() {
         console.error('Đã xảy ra lỗi khi thêm vào giỏ hàng:', error);
       });
 
-    navigate('/teddy-store/checkout');
+
   };
   const handleChangee = (info) => {
     let newFileList = [...info.fileList];
@@ -226,7 +238,7 @@ export default function Detail_product() {
     console.log(id_color)
     console.log(id_size)
     const user = JSON.parse(localStorage.getItem('userProfile')); // Lấy thông tin user từ localStorage
-    if (!user || !user.id) {
+    if (!user || !user.username) {
       message.error('Vui lòng đăng nhập');
       return;
     }
@@ -267,7 +279,11 @@ export default function Detail_product() {
         };
         console.log(cartData)
         // Gọi API để thêm vào giỏ hàng
-        axios.post('http://localhost:7070/teddy-store/add', cartData)
+        axios.post('http://localhost:7070/teddy-store/add', cartData, {
+          headers: {
+            'Content-Type': 'application/json;charset=UTF-8'
+          }
+        })
           .then(() => {
             message.success('Thêm vào giỏ hàng thành công!');
             // Thực hiện các hành động cần thiết sau khi thêm vào giỏ hàng thành công (nếu có)
@@ -471,8 +487,9 @@ Mặt sau: Nội dung 2, màu ...' />
 
                   </div>
                   <div className='connect'>
-                    <a href="https://chat.zalo.me/" className='zalo-icon'>
-                      <i className='fab fa-facebook me-2 ms-2'></i>
+                    <a href="https://chat.zalo.me/" >
+                      <img src="/img_pro/icon-Zalo-2021.jpg" alt="" className='zalo-icon'/>
+
                     </a>Chat Zalo
 
                   </div>

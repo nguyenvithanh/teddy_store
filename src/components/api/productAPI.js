@@ -11,6 +11,11 @@ const productAPI = {
         return await axiosClient
             .get(url);
     },
+    async getAllProductNoDiscount() {
+        const url = `getAllProductNoDiscount`;
+        return await axiosClient
+            .get(url);
+    },
     async searchProduct(textSearch) {
       const url = `searchProduct?textSearch=${textSearch}`;
         return await axiosClient

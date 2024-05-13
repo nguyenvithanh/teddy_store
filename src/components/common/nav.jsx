@@ -82,14 +82,21 @@ export default function Nav() {
               <i className="fa-regular fa-heart"></i>
               <span>Yêu thích</span>
             </Link>
-            <Link
-              to={"/teddy-store/cart"}
-              type="submit"
-              className="btn button-cart"
-            >
-              <i className="fa-solid fa-bag-shopping"></i>
-              <span>Giỏ hàng ({cartQuantity})</span>
-            </Link>
+            {userProfile && userProfile.role === "admin" ? (
+              <Link to={"/teddy-store/admin"} className="btn button-dashboard">
+                <i className="fa-solid fa-dashboard"></i>
+                <span>Dashboard</span>
+              </Link>
+            ) : (
+              <Link
+                to={"/teddy-store/cart"}
+                type="submit"
+                className="btn button-cart"
+              >
+                <i className="fa-solid fa-bag-shopping"></i>
+                <span>Giỏ hàng ({cartQuantity})</span>
+              </Link>
+            )}
           </div>
         </div>
       </div>
@@ -132,10 +139,14 @@ export default function Nav() {
                   <Link className="nav-link me-5">Khuyến mãi</Link>
                 </li>
                 <li className="nav-item">
-                  <Link className="nav-link me-5">Dịch vụ</Link>
+                  <Link to={"/teddy-store/service"} className="nav-link me-5">
+                    Dịch vụ
+                  </Link>
                 </li>
                 <li className="nav-item">
-                  <Link className="nav-link me-5">Liên hệ</Link>
+                  <Link to={"/teddy-store/contact"} className="nav-link me-5">
+                    Liên hệ
+                  </Link>
                 </li>
               </ul>
             </div>

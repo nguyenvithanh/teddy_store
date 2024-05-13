@@ -10,16 +10,17 @@ import productAPI from "../api/productAPI";
 
 
 const ProductPageForm = ({ product, onSaveCompleted }) => {
-    
+    // Danh sách các hình ảnh đã tải lên
     const [loading, setLoading] = useState(false);
     const [imagesList, setImagesList] = useState(product?.productImages ?? []);
-    const [fileList, setFileList] = useState([]);   
+    const [fileList, setFileList] = useState([]);   // Mảng chứa các file đã tải lên để gửi lên server
     const [listImageDelete, setListImageDelete] = useState([]);
 
     const [categoryList, setCategoryList] = useState([]);
     const [sizeList, setSizeList] = useState([]);
     const [colorList, setColorList] = useState([]);
 
+    // filldataForm
     const [productName, setProductName] = useState(product?.name ?? '');
     const [productDescription, setProductDescription] = useState(product?.description ?? '');
     const [productPrice, setProductPrice] = useState(product?.detailsProduct[0]?.price ?? 0);
@@ -29,47 +30,48 @@ const ProductPageForm = ({ product, onSaveCompleted }) => {
     const [selectedColor, setSelectedColor] = useState(product?.detailsProduct[0]?.color?.id ?? '');
 
 
-    const hiddenFileInput = useRef(null);
+    const hiddenFileInput = useRef(null); // Sử dụng để tham chiếu đến input file ẩn
 
 
     const initialAllList = async () => {
-        
+        // Lấy danh sách danh mục
         await categoryAPI.getAllActive().then((res) => {
             setCategoryList(res);
         });
-       
+        // Lấy danh sách kích thước
         await sizeAPI.getAllActive().then((res) => {
             setSizeList(res);
         });
-      
+        // Lấy danh sách màu sắc
         await colorAPI.getAllActive().then((res) => {
             setColorList(res);
         });
     }
-  
+    //cập nhật mới ds data 
     useEffect(() => {
         initialAllList().then(r => r);
     }, []);
 
     const handleUploadClick = () => {
-        hiddenFileInput.current.click(); 
+        hiddenFileInput.current.click(); // Kích hoạt click trên input file ẩn
     };
 
     const handleFileChange = (e) => {
-        const fileUploaded = e.target.files[0]; 
+        const fileUploaded = e.target.files[0]; // chọn ảnh khi mở file 
         if (fileUploaded) {
             const fileId = fileUploaded.name;
             const newImageList = [...imagesList, { id: fileId, img_url: URL.createObjectURL(fileUploaded), new: true }];
-            const newFileList = [...fileList, { id: fileId, file: fileUploaded }];
-            setFileList(newFileList);
+            const newFileList = [...fileList, { id: fileId, file: fileUploaded }]; // Thêm file vào mảng
+            setImagesList(newImageList);
+            setFileList(newFileList); // Cập nhật state với mảng file mới
         }
     };
     const deleteImage = (index, image) => {
-        
+        // Tạo một bản sao mới của mảng và loại bỏ phần tử tại vị trí chỉ mục
         const newImagesList = imagesList.filter((_, imgIndex) => imgIndex !== index);
-       
+        // Cập nhật state với mảng mới
         setImagesList(newImagesList);
-    
+        // Xóa file tương ứng với hình ảnh bị xóa
         if (!image?.new) {
             setListImageDelete([...listImageDelete, image.id]);
         }
@@ -148,7 +150,7 @@ const ProductPageForm = ({ product, onSaveCompleted }) => {
         else {
             setLoading(true);
             const formData = new FormData();
-            fileList.forEach(file => {
+            fileList.forEach(file => { // lặp qua file truyền hình ảnh đã chọn truyền vào images
                 formData.append('images', file.file);
             });
             formData.append('name', productName);
@@ -159,7 +161,7 @@ const ProductPageForm = ({ product, onSaveCompleted }) => {
             formData.append('idSize', selectedSize);
             formData.append('idColor', selectedColor);
             formData.append('listImageDelete', listImageDelete);
-            formData.append('id', product?.id ?? 'P-1');
+            formData.append('id', product?.id ?? 'P-1'); // nếu product?.id = null truyền p-1 sang be xuly
             productAPI.updateProduct(formData).then((res) => {
                 setLoading(false);
                 if (res === 'OK') {

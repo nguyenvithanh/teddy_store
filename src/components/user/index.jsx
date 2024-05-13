@@ -8,6 +8,7 @@ import GauBongHoatHinh from "./GauBongHoatHinh";
 import { Link } from "react-router-dom";
 import "./css/index-user.css";
 import Banner from "../common/banner.jsx";
+import axios from "axios";
 
 export default function Index() {
   return (
